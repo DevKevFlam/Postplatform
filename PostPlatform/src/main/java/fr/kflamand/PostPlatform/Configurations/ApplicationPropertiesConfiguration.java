@@ -11,11 +11,11 @@ public class ApplicationPropertiesConfiguration {
 
         // TODO limite de post par page
 
-        public int getLimitDeProduits() {
+        public int getLimitDePosts() {
             return limitDePosts;
         }
 
-        public void setLimitDeProduits(int limitDePosts) {
+        public void setLimitDePosts(int limitDePosts) {
             this.limitDePosts = limitDePosts;
         }
 

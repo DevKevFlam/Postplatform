@@ -1,6 +1,7 @@
 package fr.kflamand.PostPlatform.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="USERS")
@@ -10,9 +11,11 @@ public class User {
     @GeneratedValue
     private int id;
 
+    @NotNull
     @Column(unique = true)
     private String email;
 
+    @NotNull
     @Column(unique = true)
     private String pseudo;
 

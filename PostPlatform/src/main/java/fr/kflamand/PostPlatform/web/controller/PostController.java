@@ -43,7 +43,7 @@ public class PostController implements HealthIndicator {
 
         if (products.isEmpty()) throw new PostNotFoundException("Aucun post n'est disponible à la vente");
 
-        List<Post> listeLimitee = products.subList(0, appProperties.getLimitDeProduits());
+        List<Post> listeLimitee = products.subList(0, appProperties.getLimitDePosts());
 
 
         //log.info("Récupération de la liste des produits");
