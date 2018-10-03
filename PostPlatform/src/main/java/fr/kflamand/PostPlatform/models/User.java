@@ -4,29 +4,54 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="USERS")
 public class User {
 
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private long id;
+
+    //Encryption
+    @NotNull
+    @Column(name = "password")
+    private String password;
 
     @NotNull
-    @Column(unique = true)
     private String email;
 
     @NotNull
-    @Column(unique = true)
     private String pseudo;
 
     public User() {
     }
 
-    public User(String email, String pseudo) {
+    public User(String email, String pseudo, String password) {
         this.email = email;
         this.pseudo = pseudo;
+        this.password = password;
     }
 
+    public User(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /*
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    */
     public String getEmail() {
         return email;
     }
@@ -41,5 +66,15 @@ public class User {
 
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                '}';
     }
 }
