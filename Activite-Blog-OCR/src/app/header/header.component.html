@@ -5,6 +5,9 @@
         <a routerLink="posts">Posts</a>
       </li>
       <li routerLinkActive="active">
+        <a routerLink="users">Users</a>
+      </li>
+      <li routerLinkActive="active">
         <a routerLink="posts/new" *ngIf="isAuth">Nouveau Post</a>
       </li>
     </ul>
@@ -14,6 +17,9 @@
       </li>
       <li routerLinkActive="active" *ngIf="!isAuth">
         <a routerLink="auth/signin">Se connecter</a>
+      </li>
+      <li routerLinkActive="active">
+        <a *ngIf="isAuth" style="cursor:pointer" routerLink="Mon_compte">Mon compte</a>
       </li>
       <li >
         <a (click)="onSignOut()" *ngIf="isAuth" style="cursor:pointer">Se déconnecter</a>

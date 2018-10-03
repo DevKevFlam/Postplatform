@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 
 
 @SpringBootApplication
-@EnableConfigurationProperties
+//@EnableConfigurationProperties
 public class PostPlatformApplication {
 
 	public static void main(String[] args) {

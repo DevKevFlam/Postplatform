@@ -7,14 +7,12 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
-    //Encryption
-    @NotNull
-    @Column(name = "password")
-    private String password;
+    //Encryption + pb de mise en base
+    private String mdp;
 
     @NotNull
     private String email;
@@ -25,10 +23,10 @@ public class User {
     public User() {
     }
 
-    public User(String email, String pseudo, String password) {
+    public User(String email, String pseudo, String mdp) {
         this.email = email;
         this.pseudo = pseudo;
-        this.password = password;
+        this.mdp = mdp;
     }
 
     public User(long id) {
@@ -72,7 +70,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", password='" + password + '\'' +
+                ", password='" + mdp + '\'' +
                 ", email='" + email + '\'' +
                 ", pseudo='" + pseudo + '\'' +
                 '}';
