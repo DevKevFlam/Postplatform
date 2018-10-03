@@ -1,15 +1,15 @@
 package fr.kflamand.PostPlatform.models;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
+@Table(name="POSTS")
 public class Post {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
-    private long id;
+    @GeneratedValue
+    private int id;
+
 
     private int loveIts;
     private int date;
@@ -20,19 +20,23 @@ public class Post {
 
     private String contenu;
 
-    @OneToMany
-    private Collection<User> poster;
+    @Column(unique = true)
+    private String poster;
 
     //TODO comentaire
 
     public Post(){}
 
-    public Post(long id){
-        this.id =id ;
+    public Post(int loveIts, int date, String url, String title, String contenu, String poster) {
+        this.loveIts = loveIts;
+        this.date = date;
+        this.url = url;
+        this.title = title;
+        this.contenu = contenu;
+        this.poster = poster;
     }
 
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -80,6 +84,13 @@ public class Post {
         this.contenu = contenu;
     }
 
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 
 
 }

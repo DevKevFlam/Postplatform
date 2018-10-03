@@ -15,13 +15,11 @@ import {SigninComponent} from './auth/signin/signin.component';
 import {SignupComponent} from './auth/signup/signup.component';
 import { UpdatePostComponent } from './update-post/update-post.component';
 import { NewPostComponent } from './new-post/new-post.component';
-import { UserListComponent } from './user-list/user-list.component';
 
 
 const appRoutes: Routes = [
   {path: 'auth/signup', component: SignupComponent},
   {path: 'auth/signin', component: SigninComponent},
-  {path: 'users', component: UserListComponent},
   {path: 'posts', component: PostListComponent},
   {path: 'posts/view/:id', component: PostListItemComponent},
   {path: 'posts/new', canActivate: [AuthGuardService], component: NewPostComponent},
@@ -40,13 +38,12 @@ const appRoutes: Routes = [
     SignupComponent,
     UpdatePostComponent,
     NewPostComponent,
-    UserListComponent,
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forRoot(appRoutes),
   ],
   providers: [

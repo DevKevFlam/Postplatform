@@ -1,108 +1,74 @@
 package fr.kflamand.PostPlatform.web.controller;
 
 import fr.kflamand.PostPlatform.Dao.UserDao;
+import fr.kflamand.PostPlatform.Exception.UserNotFoundException;
 import fr.kflamand.PostPlatform.models.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
 
 
-@RestController
-public class UserController {
-
-    // Private fields
-
-    Logger log = LoggerFactory.getLogger(this.getClass());
+@Controller
+public class UserController implements HealthIndicator {
 
     @Autowired
-    private UserDao userDao;
+   private UserDao userDao;
 
-    @PostMapping("/create")
-    public String create(@RequestBody User user ) {
+           Logger log = LoggerFactory.getLogger(this.getClass());
 
-        try {
+    @Override
+    public Health health() {
 
-            log.info("\n"+"\n"+user.toString()+"\n"+"\n");
-            userDao.save(user);
+        List<User> users = userDao.findAll();
 
+        if (users.isEmpty()) {
+            return Health.down().build();
         }
-        catch (Exception ex) {
-            return "Error creating the user: " + ex.toString();
-        }
-        return "User succesfully created! (id = " + user.getId() + ")";
+        return Health.up().build();
     }
 
-    /**
-     * GET /delete  --> Delete the user having the passed id.
-     */
-    @RequestMapping("/delete")
-    @ResponseBody
-    public String delete(long id) {
-        try {
-            User user = new User(id);
-            userDao.delete(user);
-        }
-        catch (Exception ex) {
-            return "Error deleting the user:" + ex.toString();
-        }
-        return "User succesfully deleted!";
-    }
+    // Affiche la liste de tous les produits disponibles
+    @GetMapping(value = "/Users")
+    public List<User> listeDesProduits() {
 
-    /**
-     * GET /get-by-email  --> Return the id for the user having the passed
-     * email.
-     */
-    @RequestMapping("/get-by-email")
-    @ResponseBody
-    public String getByEmail(String email) {
-        String userId = "";
-        try {
-            User user = userDao.findByEmail(email);
-            userId = String.valueOf(user.getId());
-        }
-        catch (Exception ex) {
-            return "User not found";
-        }
-        return "The user id is: " + userId;
-    }
+        List<User> users = userDao.findAll();
 
-    @GetMapping("/get-all")
-    @ResponseBody
-    public List<User>getAllUser( ) {
-        List<User> users ;
-        users = userDao.findAll();
-        if(users.isEmpty()) {
+        if (users.isEmpty()) throw new UserNotFoundException("Aucun user n'est disponible à la vente");
 
-            log.info("Users not found");
-            //TODO Throw exception
-        }
         return users;
+
     }
 
-    /**
-     * GET /update  --> Update the email and the name for the user in the
-     * database having the passed id.
-     */
-    @RequestMapping("/update")
-    @ResponseBody
-    public String updateUser(long id, String email, String pseudo) {
-        try {
-            Optional<User> user = userDao.findById(id);
-            user.get().setEmail(email);
-            user.get().setPseudo(pseudo);
-            userDao.save(user.get());
-        }
-        catch (Exception ex) {
-            return "Error updating the user: " + ex.toString();
-        }
-        return "User succesfully updated!";
+    //Récuperer un produit par son id
+    @GetMapping(value = "/Users/{id}")
+    public Optional<User> recupererUnProduit(@PathVariable int id) {
+
+        Optional<User> user = userDao.findById(id);
+
+        if (!user.isPresent())
+            throw new UserNotFoundException("User correspondant à l'id " + id + " n'existe pas");
+
+        return user;
     }
 
+
+    //Récuperer un produit par son id
+    @PostMapping(value = "/User")
+    public void ajouterUser(User user) {
+
+        // TODO Ajjout d'un user
+
+    }
 
 }
-

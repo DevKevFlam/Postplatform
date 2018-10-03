@@ -11,8 +11,7 @@ export class PostService {
   posts: Post[] = [];
   postsSubject = new Subject<Post[]>();
 
-  constructor() {
-  }
+  constructor() {}
 
   emitPosts() {
     this.postsSubject.next(this.posts);
@@ -54,7 +53,7 @@ export class PostService {
   updatePost(post: Post, id: number) {
     this.getPosts();
     post.date = Date.now();
-    this.posts[id] = post;
+    this.posts[id] = post ;
     this.savePosts();
     this.emitPosts();
   }
@@ -80,7 +79,7 @@ export class PostService {
 
   modifyLoveIt(post: Post, id: number) {
     this.getPosts();
-    this.posts[id].loveIts = post.loveIts;
+    this.posts[id].loveIts = post.loveIts ;
     this.savePosts();
     this.emitPosts();
   }

@@ -7,30 +7,16 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("mes-configs")
 public class ApplicationPropertiesConfiguration {
 
-        private static final int limitDePosts = 5;
-        private int minPost;
-        private int maxPost;
+        private int limitDePosts;
 
         // TODO limite de post par page
 
+        public int getLimitDeProduits() {
+            return limitDePosts;
+        }
 
-    public static int getLimitDePosts() {
-        return limitDePosts;
-    }
+        public void setLimitDeProduits(int limitDePosts) {
+            this.limitDePosts = limitDePosts;
+        }
 
-    public int getMinPost() {
-        return minPost;
-    }
-
-    public void setMinPost(int minPost) {
-        this.minPost = minPost;
-    }
-
-    public int getMaxPost() {
-        return maxPost;
-    }
-
-    public void setMaxPost(int maxPost) {
-        this.maxPost = maxPost;
-    }
 }

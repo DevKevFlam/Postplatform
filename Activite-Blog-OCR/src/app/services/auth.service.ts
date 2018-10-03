@@ -6,8 +6,6 @@ import * as firebase from 'firebase';
 })
 export class AuthService {
 
-  // TODO liaison avec Spring Security et Service Auth from PostPlatform BAckend
-
   constructor() { }
 
   createNewUser(email: string, password: string) {
