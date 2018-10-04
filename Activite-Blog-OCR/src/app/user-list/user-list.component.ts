@@ -54,7 +54,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   onViewUser(id: number) {
-    this.router.navigate(['/users', 'view', id+1]);
+    this.router.navigate(['/users', 'view', id]);
   }
 
   ngOnDestroy() {

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
-import * as firebase from 'firebase';
 import {User} from '../models/user.model';
 import {HttpClient} from '@angular/common/http';
 
@@ -41,8 +40,17 @@ export class UserService {
   }
 
   getSingleUser(id: number): User {
-    // TODO liaison a PostPlatform par Httpclient
-    this.getUsers();
-    return this.users[+id];
+    let user: User = new User('', '');
+    console.log(this.apiUrl + '/get-one/'+ (id))
+    this.http.get<User>(this.apiUrl + '/get-one/'+ (id)).toPromise().then(
+      data => {
+user.id = data.id;
+user.pseudo = data.pseudo;
+user.email = data.email;
+user.mdp = data.mdp;
+      }
+    )
+    //Pour debug
+    return user;
   }
 }

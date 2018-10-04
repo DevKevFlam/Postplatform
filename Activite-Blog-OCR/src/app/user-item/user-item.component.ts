@@ -21,8 +21,9 @@ export class UserItemComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
+    this.user = new User('','');
     const id = this.route.snapshot.params['id'];
-    console.log(id );
+    console.log(id);
     this.user = this.userService.getSingleUser(id);
     /*
     firebase.auth().onAuthStateChanged(

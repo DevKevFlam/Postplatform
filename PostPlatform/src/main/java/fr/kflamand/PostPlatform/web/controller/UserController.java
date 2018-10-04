@@ -24,55 +24,10 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @PostMapping("/create")
-    public String create(@RequestBody User user ) {
-
-        try {
-
-            log.info("\n"+"\n"+user.toString()+"\n"+"\n");
-            userDao.save(user);
-
-        }
-        catch (Exception ex) {
-            return "Error creating the user: " + ex.toString();
-        }
-        return "User succesfully created! (id = " + user.getId() + ")";
-    }
-
     /**
-     * GET /delete  --> Delete the user having the passed id.
+     * Envoi List User
+     * @return
      */
-    @RequestMapping("/delete")
-    @ResponseBody
-    public String delete(long id) {
-        try {
-            User user = new User(id);
-            userDao.delete(user);
-        }
-        catch (Exception ex) {
-            return "Error deleting the user:" + ex.toString();
-        }
-        return "User succesfully deleted!";
-    }
-
-    /**
-     * GET /get-by-email  --> Return the id for the user having the passed
-     * email.
-     */
-    @RequestMapping("/get-by-email")
-    @ResponseBody
-    public String getByEmail(String email) {
-        String userId = "";
-        try {
-            User user = userDao.findByEmail(email);
-            userId = String.valueOf(user.getId());
-        }
-        catch (Exception ex) {
-            return "User not found";
-        }
-        return "The user id is: " + userId;
-    }
-
     @GetMapping("/get-all")
     @ResponseBody
     public List<User>getAllUser( ) {
@@ -86,25 +41,35 @@ public class UserController {
         return users;
     }
 
-
     /**
-     * GET /update  --> Update the email and the name for the user in the
-     * database having the passed id.
+     * User.id = id
+     * @param id
+     * @return
      */
-    @RequestMapping("/update")
+    @GetMapping("/get-one/{id}")
     @ResponseBody
-    public String updateUser(long id, String email, String pseudo) {
-        try {
-            Optional<User> user = userDao.findById(id);
-            user.get().setEmail(email);
-            user.get().setPseudo(pseudo);
-            userDao.save(user.get());
+    public User getOneUserById(@PathVariable long id ) {
+        User user ;
+       Optional<User> userOp = userDao.findById(id);
+       user = userOp.get();
+       log.info(user.toString());
+        if(user == null ) {
+
+            log.info("User not found");
+            //TODO Throw exception
         }
-        catch (Exception ex) {
-            return "Error updating the user: " + ex.toString();
-        }
-        return "User succesfully updated!";
+        return user;
     }
+
+    @PostMapping("/add-one")
+    @ResponseBody
+    public void addUser( User user ) {
+log.info(user.toString());
+        userDao.save(user);
+
+    }
+
+
 
 
 }
