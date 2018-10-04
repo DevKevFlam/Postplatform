@@ -53,4 +53,11 @@ user.mdp = data.mdp;
     //Pour debug
     return user;
   }
+
+  createNewUser(user: User) {
+
+
+
+  }
+
 }

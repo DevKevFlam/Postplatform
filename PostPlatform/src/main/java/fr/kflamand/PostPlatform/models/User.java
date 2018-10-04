@@ -70,7 +70,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", password='" + mdp + '\'' +
+                ", mdp='" + mdp + '\'' +
                 ", email='" + email + '\'' +
                 ", pseudo='" + pseudo + '\'' +
                 '}';

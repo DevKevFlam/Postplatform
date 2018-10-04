@@ -62,8 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/add-one")
-    @ResponseBody
-    public void addUser( User user ) {
+    public void addUser( @RequestBody User user ) {
 log.info(user.toString());
         userDao.save(user);
 
