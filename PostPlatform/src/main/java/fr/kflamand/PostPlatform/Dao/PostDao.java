@@ -1,10 +1,15 @@
 package fr.kflamand.PostPlatform.Dao;
 
 import fr.kflamand.PostPlatform.models.Post;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-public interface PostDao extends JpaRepository<Post, Integer> {
+import java.util.List;
 
+@Transactional
+public interface PostDao extends CrudRepository<Post, Long> {
+
+
+    @Override
+    List<Post> findAll();
 }

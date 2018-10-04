@@ -1,29 +1,55 @@
 package fr.kflamand.PostPlatform.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="USERS")
 public class User {
 
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
 
-    @Column(unique = true)
+    //Encryption + pb de mise en base
+    private String mdp;
+
+    @NotNull
     private String email;
 
-    @Column(unique = true)
+    @NotNull
     private String pseudo;
 
     public User() {
     }
 
-    public User(String email, String pseudo) {
+    public User(String email, String pseudo, String mdp) {
         this.email = email;
         this.pseudo = pseudo;
+        this.mdp = mdp;
     }
 
+    public User(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /*
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    */
     public String getEmail() {
         return email;
     }
@@ -38,5 +64,15 @@ public class User {
 
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", password='" + mdp + '\'' +
+                ", email='" + email + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                '}';
     }
 }

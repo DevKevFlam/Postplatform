@@ -5,18 +5,21 @@ import fr.kflamand.PostPlatform.Dao.PostDao;
 import fr.kflamand.PostPlatform.Exception.PostNotFoundException;
 import fr.kflamand.PostPlatform.models.Post;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
 
-@Controller
-public class PostController implements HealthIndicator {
+@RestController
+public class PostController  {
+
+    //Logger du Controller
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     PostDao postsDao;
@@ -24,42 +27,31 @@ public class PostController implements HealthIndicator {
     @Autowired
     ApplicationPropertiesConfiguration appProperties;
 
-    @Override
-    public Health health() {
+    // Affiche la liste de tous les posts
+    @GetMapping(value = "/Posts")
+    public List<Post> listeDesPosts() {
 
         List<Post> posts = postsDao.findAll();
 
-        if (posts.isEmpty()) {
-            return Health.down().build();
-        }
-        return Health.up().build();
-    }
+        if (posts.isEmpty()) throw new PostNotFoundException("Aucun post n'est disponible");
 
-    // Affiche la liste de tous les produits disponibles
-    @GetMapping(value = "/Posts")
-    public List<Post> listeDesProduits() {
-
-        List<Post> products = postsDao.findAll();
-
-        if (products.isEmpty()) throw new PostNotFoundException("Aucun post n'est disponible à la vente");
-
-        List<Post> listeLimitee = products.subList(0, appProperties.getLimitDeProduits());
+        List<Post> listeLimitee = posts.subList(appProperties.getMinPost(), appProperties.getMaxPost());
 
 
-        //log.info("Récupération de la liste des produits");
+        log.info("Récupération de la liste des produits");
 
         return listeLimitee;
 
     }
 
-    //Récuperer un produit par son id
+    //Récuperer un post par son id
     @GetMapping(value = "/Posts/{id}")
-    public Optional<Post> recupererUnProduit(@PathVariable int id) {
+    public Optional<Post> recupererUnPost(@PathVariable long id) {
 
         Optional<Post> post = postsDao.findById(id);
 
         if (!post.isPresent())
-            throw new PostNotFoundException("Le produit correspondant à l'id " + id + " n'existe pas");
+            throw new PostNotFoundException("Le post correspondant à l'id " + id + " n'existe pas");
 
         return post;
     }
