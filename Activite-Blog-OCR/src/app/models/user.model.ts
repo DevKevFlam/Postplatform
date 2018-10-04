@@ -1,7 +1,13 @@
 export class User {
   id: number;
-  mdp: String;
+  mdp: string;
 
-  constructor(public email: String, public pseudo: String) {
+  constructor(public email: string, public pseudo: string) {
   }
+
+  toJson(){
+    return  '{"id":' + this.id +
+            ',"email":"' + this.email +
+            '","pseudo":"' + this.pseudo +
+            '","mdp":"' + this.mdp +'"}' }
 }

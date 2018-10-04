@@ -16,11 +16,11 @@ export class AuthService {
   private apiUrl: String = 'http://localhost:9001';
 
 
-  createNewUser(email: string, password: string) {
+  createNewUser(user: User) {
+
     return new Promise(
       (resolve, reject) => {
-        this.serviceUser.createNewUser(new User(email, password));
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(
+        firebase.auth().createUserWithEmailAndPassword( user.email , user.mdp).then(
           () => {
             resolve();
           },

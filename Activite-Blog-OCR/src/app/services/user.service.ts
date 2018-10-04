@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {User} from '../models/user.model';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError} from "rxjs/operators";
 
 
 @Injectable({
@@ -13,6 +14,13 @@ export class UserService {
   users: User[] = [];
 
   userSubject = new Subject<User[]>();
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  };
+
 
   constructor(private http: HttpClient) {
   }
@@ -41,13 +49,13 @@ export class UserService {
 
   getSingleUser(id: number): User {
     let user: User = new User('', '');
-    console.log(this.apiUrl + '/get-one/'+ (id))
-    this.http.get<User>(this.apiUrl + '/get-one/'+ (id)).toPromise().then(
+    console.log(this.apiUrl + '/get-one/' + (id))
+    this.http.get<User>(this.apiUrl + '/get-one/' + (id)).toPromise().then(
       data => {
-user.id = data.id;
-user.pseudo = data.pseudo;
-user.email = data.email;
-user.mdp = data.mdp;
+        user.id = data.id;
+        user.pseudo = data.pseudo;
+        user.email = data.email;
+        user.mdp = data.mdp;
       }
     )
     //Pour debug
@@ -55,8 +63,11 @@ user.mdp = data.mdp;
   }
 
   createNewUser(user: User) {
+    user.id = 0;
+    let objectObservable = this.http.post<User>(this.apiUrl + '/add-one', user, this.httpOptions).pipe();
 
-
+    console.log(objectObservable);
+    return objectObservable;
 
   }
 
