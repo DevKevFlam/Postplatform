@@ -17,6 +17,7 @@ import { UpdatePostComponent } from './update-post/update-post.component';
 import { NewPostComponent } from './new-post/new-post.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserItemComponent } from './user-item/user-item.component';
+import {UserService} from './services/user.service';
 
 
 const appRoutes: Routes = [
@@ -56,6 +57,7 @@ const appRoutes: Routes = [
     AuthService,
     AuthGuardService,
     PostService,
+    UserService
   ],
   bootstrap: [AppComponent]
 })

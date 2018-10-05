@@ -9,5 +9,5 @@ export class User {
     return  '{"id":' + this.id +
             ',"email":"' + this.email +
             '","pseudo":"' + this.pseudo +
-            '","mdp":"' + this.mdp +'"}' }
+            '","mdp":"' + this.mdp + '"}' ; }
 }

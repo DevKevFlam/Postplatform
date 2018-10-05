@@ -2,9 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {UserService} from "../../services/user.service";
-import {User} from "../../models/user.model";
-import {Subscription} from "rxjs";
+import {UserService} from '../../services/user.service';
+import {User} from '../../models/user.model';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -66,13 +66,12 @@ export class SignupComponent implements OnInit , OnDestroy {
     const pseudo = this.signUpForm.get('pseudo').value;
     const password = this.signUpForm.get('password').value;
 
-    let user: User = new User(email,pseudo);
+    const user: User = new User(email, pseudo);
     user.mdp = password;
-    this.userService.createNewUser(user)
-      .subscribe(hero => this.users.push(hero));
-
+    this.userService.createNewUser(user);
     this.authService.createNewUser(user).then(
-      () => {;
+      () => {
+        // TODO gestion de l'authentification et MDP
       },
       (error) => {
         this.errorMassage = error;

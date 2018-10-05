@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Post} from '../models/post.model';
 import {Subject} from 'rxjs';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +28,9 @@ export class PostService {
   savePosts() {
     console.log( 'longeur du tab de post          ' + this.posts.length);
     console.log( 'Post à l\'index ' + this.posts[this.posts.length-1].toString());
-    //firebase.database().ref('/posts').set(this.posts);
+    // firebase.database().ref('/posts').set(this.posts);
 
-    let objectObservable = this.http.post<Post>(this.apiUrl + '/Posts', this.posts[this.posts.length-1], this.httpOptions).pipe();
+    const objectObservable = this.http.post<Post>(this.apiUrl + '/Posts', this.posts[this.posts.length-1], this.httpOptions).pipe();
 
     console.log(objectObservable);
     return objectObservable;
@@ -43,7 +43,7 @@ export class PostService {
     this.http.get<any[]>(this.apiUrl + '/Posts').toPromise().then(
       data => {
         data.forEach(value => {
-          let post = new Post(value.title, value.contenu, value.poster);
+          const post = new Post(value.title, value.contenu, value.poster);
           post.id = value.id;
           post.loveIts = value.loveIts;
           post.date = value.date;
@@ -58,7 +58,7 @@ export class PostService {
   }
 
   getSinglePost(id: number): Post {
-    let post: Post = new Post('', '', '');
+    const post: Post = new Post('', '', '');
     console.log(this.apiUrl + '/Posts/' + (id))
     this.http.get<Post>(this.apiUrl + '/Posts/' + (id)).toPromise().then(
       data => {
