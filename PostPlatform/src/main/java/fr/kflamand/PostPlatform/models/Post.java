@@ -12,12 +12,13 @@ public class Post {
     private long id;
 
     private int loveIts;
-    private int date;
+    private long date;
     private String url;
 
     @Column(unique = true)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String contenu;
 
     @OneToMany
@@ -36,7 +37,7 @@ public class Post {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -48,11 +49,11 @@ public class Post {
         this.loveIts = loveIts;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

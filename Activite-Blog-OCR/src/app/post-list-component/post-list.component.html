@@ -2,7 +2,7 @@
     <h2>Posts</h2>
 
     <div class="list-group">
-      <button *ngFor="let post of posts, let i = index" (click)="onViewPost(i)" [ngClass]="{'list-group-item': true,
+      <button *ngFor="let post of posts, let i = index" (click)="onViewPost(i+1)" [ngClass]="{'list-group-item': true,
  'list-group-item-success': posts[i].loveIts > 0,
  'list-group-item-danger': posts[i].loveIts < 0,
  'list-group-item-info': posts[i].loveIts === 0}">

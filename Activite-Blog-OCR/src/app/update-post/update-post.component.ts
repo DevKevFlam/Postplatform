@@ -22,13 +22,9 @@ export class UpdatePostComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.post = new Post('', '', '');
+
     const id = this.route.snapshot.params['id'];
-    this.postService.getSinglePost(+id).then(
-      (post: Post) => {
-        this.post = post;
-      }
-    );
+    this.post = this.postService.getSinglePost(+id);
     this.initForm();
   }
 

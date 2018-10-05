@@ -1,17 +1,24 @@
 import {Injectable} from '@angular/core';
 import {Post} from '../models/post.model';
 import {Subject} from 'rxjs';
-import * as firebase from 'firebase';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
+  private apiUrl: String = 'http://localhost:9001';
   posts: Post[] = [];
   postsSubject = new Subject<Post[]>();
 
-  constructor() {
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  };
+
+  constructor(private http: HttpClient) {
   }
 
   emitPosts() {
@@ -19,35 +26,60 @@ export class PostService {
   }
 
   savePosts() {
-    firebase.database().ref('/posts').set(this.posts);
+    console.log( 'longeur du tab de post          ' + this.posts.length);
+    console.log( 'Post à l\'index ' + this.posts[this.posts.length-1].toString());
+    //firebase.database().ref('/posts').set(this.posts);
+
+    let objectObservable = this.http.post<Post>(this.apiUrl + '/Posts', this.posts[this.posts.length-1], this.httpOptions).pipe();
+
+    console.log(objectObservable);
+    return objectObservable;
   }
 
   getPosts() {
-    firebase.database().ref('/posts').on('value', (data) => {
-      this.posts = data.val() ? data.val() : [];
-      this.emitPosts();
-    });
+
+    // Ok reconstruction de la list Users
+    this.posts = [];
+    this.http.get<any[]>(this.apiUrl + '/Posts').toPromise().then(
+      data => {
+        data.forEach(value => {
+          let post = new Post(value.title, value.contenu, value.poster);
+          post.id = value.id;
+          post.loveIts = value.loveIts;
+          post.date = value.date;
+          post.url = value.url;
+          this.posts.push(post)
+        });
+      }
+    )
+    //Pour debug
+    console.log(this.posts);
+    this.emitPosts();
   }
 
-  getSinglePost(id: number) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.database().ref('/posts/' + id).once('value').then(
-          (data) => {
-            resolve(data.val());
-          }, (error) => {
-            reject(error);
-          }
-        );
+  getSinglePost(id: number): Post {
+    let post: Post = new Post('', '', '');
+    console.log(this.apiUrl + '/Posts/' + (id))
+    this.http.get<Post>(this.apiUrl + '/Posts/' + (id)).toPromise().then(
+      data => {
+        post.id = data.id;
+        post.title = data.title;
+        post.contenu = data.contenu;
+        post.poster = data.poster;
+        post.url = data.url;
+        post.date = data.date;
+        post.loveIts = data.loveIts;
+
       }
-    );
+    )
+    return post;
   }
 
   createNewPost(newPost: Post) {
     newPost.date = Date.now();
     newPost.loveIts = 0;
     this.posts.push(newPost);
-    this.savePosts();
+    this.savePosts().subscribe();
     this.emitPosts();
   }
 
