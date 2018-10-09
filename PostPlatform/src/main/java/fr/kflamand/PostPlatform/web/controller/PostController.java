@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin("http://localhost:4200")
 @RestController
 public class PostController {
 
@@ -53,11 +54,31 @@ public class PostController {
 
     @PostMapping("/Posts")
     @ResponseBody
-    public void addUser(@RequestBody Post post) {
+    public void addPost(@RequestBody Post post) {
 
         log.info(post.toString());
         postsDao.save(post);
 
     }
+
+    @PatchMapping("/Posts")
+    @ResponseBody
+    public void updatePost(@RequestBody Post post) {
+
+        log.info(post.toString());
+        postsDao.save(post);
+
+    }
+
+    @DeleteMapping("/Posts/{id}")
+    @ResponseBody
+    public void deletePost(@PathVariable long id) {
+
+        Post post = postsDao.findPostByIdEquals(id);
+        postsDao.delete(post);
+
+    }
+
+
 
 }

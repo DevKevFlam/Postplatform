@@ -9,8 +9,11 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 export class PostService {
 
   private apiUrl: String = 'http://localhost:9001';
-  posts: Post[] = [];
+  posts: Post [] = [];
   postsSubject = new Subject<Post[]>();
+
+  postEnCour: Post = null;
+  postSubject = new Subject<Post>();
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -25,57 +28,88 @@ export class PostService {
     this.postsSubject.next(this.posts);
   }
 
-  savePosts() {
-    console.log( 'longeur du tab de post          ' + this.posts.length);
-    console.log( 'Post à l\'index ' + this.posts[this.posts.length-1].toString());
-    // firebase.database().ref('/posts').set(this.posts);
+  emitPostEnCour() {
+    this.postSubject.next(this.postEnCour);
+  }
 
-    const objectObservable = this.http.post<Post>(this.apiUrl + '/Posts', this.posts[this.posts.length-1], this.httpOptions).pipe();
 
-    console.log(objectObservable);
+  ////////////////////////////////////HTTP Request for PostPlatform: POST, PATCH, DELETE
+  //OK
+  private savePosts() {
+    const objectObservable = this.http.post(this.apiUrl + '/Posts', this.posts[this.posts.length - 1], this.httpOptions).pipe();
     return objectObservable;
   }
 
+  //OK
+  private updatePosts(id: number) {
+    const objectObservable = this.http.patch(this.apiUrl + '/Posts', this.posts[id], this.httpOptions).pipe();
+    return objectObservable;
+  }
+
+  //Ok
+  private deletePost(id: number) {
+    const objectObservable = this.http.delete(this.apiUrl + '/Posts/' + id, this.httpOptions).pipe();
+    return objectObservable;
+  }
+
+  ///////////////////////////////////HTTP Request for PostPlatform: GET
+  //OK
   getPosts() {
 
     // Ok reconstruction de la list Users
     this.posts = [];
-    this.http.get<any[]>(this.apiUrl + '/Posts').toPromise().then(
+    this.http.get<Post[]>(this.apiUrl + '/Posts').toPromise().then(
       data => {
         data.forEach(value => {
-          const post = new Post(value.title, value.contenu, value.poster);
+
+          let post: Post;
+          post = new Post(value.title, value.contenu, value.poster);
           post.id = value.id;
           post.loveIts = value.loveIts;
           post.date = value.date;
           post.url = value.url;
-          this.posts.push(post)
+          console.log(post);
+
+          this.posts.push(post);
+
         });
+        console.log(this.posts);
       }
     )
     //Pour debug
-    console.log(this.posts);
+    //console.log(this.posts);
     this.emitPosts();
   }
 
+  //OK
   getSinglePost(id: number): Post {
-    const post: Post = new Post('', '', '');
-    console.log(this.apiUrl + '/Posts/' + (id))
+    this.postEnCour = new Post('', '', '');
     this.http.get<Post>(this.apiUrl + '/Posts/' + (id)).toPromise().then(
       data => {
-        post.id = data.id;
-        post.title = data.title;
-        post.contenu = data.contenu;
-        post.poster = data.poster;
-        post.url = data.url;
-        post.date = data.date;
-        post.loveIts = data.loveIts;
+
+        this.postEnCour.id = data.id;
+        this.postEnCour.title = data.title;
+        this.postEnCour.contenu = data.contenu;
+        this.postEnCour.poster = data.poster;
+        this.postEnCour.url = data.url;
+        this.postEnCour.date = data.date;
+        this.postEnCour.loveIts = data.loveIts;
+
+          if (this.postEnCour.title === '' || this.postEnCour.title === null) {
+            // TODO Post introuvable exception
+            console.log("Post introuvable exception!!!")
+          }
 
       }
     )
-    return post;
+    this.emitPostEnCour();
+    return this.postEnCour;
   }
 
+  ////////////////////////////////////
+  //OK
   createNewPost(newPost: Post) {
+    // TODO Renseigner newPost.poster
     newPost.date = Date.now();
     newPost.loveIts = 0;
     this.posts.push(newPost);
@@ -83,14 +117,15 @@ export class PostService {
     this.emitPosts();
   }
 
+  //OK
   updatePost(post: Post, id: number) {
-    this.getPosts();
+    this.posts[post.id] = post;
     post.date = Date.now();
-    this.posts[id] = post;
-    this.savePosts();
+    this.updatePosts(id).subscribe();
     this.emitPosts();
   }
 
+  //OK
   removePost(post: Post) {
     const bookIndexToRemove = this.posts.findIndex(
       (postEl) => {
@@ -100,20 +135,15 @@ export class PostService {
       }
     );
     this.posts.splice(bookIndexToRemove, 1);
-    this.savePosts();
+    this.deletePost(bookIndexToRemove).subscribe();
     this.emitPosts();
   }
 
+  //OK
   removePostById(id: number) {
     this.posts.splice(id, 1);
-    this.savePosts();
+    this.deletePost(id).subscribe();
     this.emitPosts();
   }
 
-  modifyLoveIt(post: Post, id: number) {
-    this.getPosts();
-    this.posts[id].loveIts = post.loveIts;
-    this.savePosts();
-    this.emitPosts();
-  }
 }

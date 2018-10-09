@@ -9,6 +9,9 @@ import java.util.List;
 @Transactional
 public interface PostDao extends CrudRepository<Post, Long> {
 
+    Post findPostByIdEquals ( long id );
+
+    Post findPostByTitleEquals ( String title );
 
     @Override
     List<Post> findAll();

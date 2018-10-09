@@ -3,7 +3,6 @@ import {Subject} from 'rxjs';
 import {User} from '../models/user.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-
 @Injectable({
   providedIn: 'root'
 })

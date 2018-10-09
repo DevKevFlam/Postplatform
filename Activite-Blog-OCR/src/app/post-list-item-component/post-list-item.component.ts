@@ -14,6 +14,7 @@ export class PostListItemComponent implements OnInit {
 
   isAuth: Boolean;
   post: Post;
+  postSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private postService: PostService,
@@ -21,7 +22,14 @@ export class PostListItemComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.params['id'];
-    this.post = this.postService.getSinglePost(+id)
+    this.postSubscription = this.postService.postSubject.subscribe(
+      (post: Post) => {
+        this.post = post;
+      }
+    );
+    this.post = this.postService.getSinglePost(+id);
+    
+    // TODO Init isAuth sans firebase
     firebase.auth().onAuthStateChanged(
       (user) => {
         if (user) {
@@ -40,13 +48,13 @@ export class PostListItemComponent implements OnInit {
   onLoveIt() {
     const id = this.route.snapshot.params['id'];
     this.post.loveIts = this.post.loveIts + 1;
-   this.postService.modifyLoveIt(this.post, id);
+   this.postService.updatePost(this.post, id);
   }
 
   onDontLoveIt() {
     const id = this.route.snapshot.params['id'];
     this.post.loveIts = this.post.loveIts - 1;
-    this.postService.modifyLoveIt(this.post, id);
+    this.postService.updatePost(this.post, id);
   }
 
   onDelete() {
