@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PostService} from '../services/post.service';
 import * as firebase from 'firebase';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-update-post',
@@ -12,8 +13,10 @@ import * as firebase from 'firebase';
 })
 export class UpdatePostComponent implements OnInit {
 
+  isAuth: Boolean;
   post: Post;
   postForm: FormGroup;
+  postSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private formBuilder: FormBuilder,
@@ -22,8 +25,13 @@ export class UpdatePostComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    // TODO Init isAuth sans firebase
     const id = this.route.snapshot.params['id'];
+    this.postSubscription = this.postService.postSubject.subscribe(
+      (post: Post) => {
+        this.post = post;
+      }
+    );
     this.post = this.postService.getSinglePost(+id);
     this.initForm();
   }

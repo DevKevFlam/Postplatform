@@ -16,5 +16,7 @@ public interface UserDao extends /*JpaRepository*/  CrudRepository<User, Long> {
     @Override
     List<User> findAll();
 
+    User findUserByIdEquals ( long id );
+
 
 }

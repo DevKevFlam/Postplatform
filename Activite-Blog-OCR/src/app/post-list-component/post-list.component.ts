@@ -45,7 +45,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onModifyPost(id: number) {
-    this.router.navigate(['/posts', 'update', id]);
+    this.router.navigate(['/posts', 'update', id + 1 ]);
   }
 
   onDeletePost(post: Post) {

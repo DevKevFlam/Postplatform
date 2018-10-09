@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin("http://localhost:4200")
 @RestController
 public class PostController {
 
@@ -42,12 +41,21 @@ public class PostController {
 
     //Récuperer un post par son id
     @GetMapping(value = "/Posts/{id}")
-    public Optional<Post> recupererUnPost(@PathVariable long id) {
+    public Post recupererUnPost(@PathVariable long id) {
 
-        Optional<Post> post = postsDao.findById(id);
+        Optional<Post> postOp = postsDao.findById(id);
 
-        if (!post.isPresent())
+        if (!postOp.isPresent()) {
             throw new PostNotFoundException("Le post correspondant à l'id " + id + " n'existe pas");
+        }
+
+        Post post = postOp.get();
+
+        if (post == null) {
+
+            log.info("User not found");
+            throw new PostNotFoundException("Le post correspondant à l'id " + id + " n'existe pas");
+        }
 
         return post;
     }
@@ -78,7 +86,6 @@ public class PostController {
         postsDao.delete(post);
 
     }
-
 
 
 }

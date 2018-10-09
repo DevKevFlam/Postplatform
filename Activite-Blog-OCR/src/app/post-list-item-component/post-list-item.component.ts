@@ -28,7 +28,7 @@ export class PostListItemComponent implements OnInit {
       }
     );
     this.post = this.postService.getSinglePost(+id);
-    
+
     // TODO Init isAuth sans firebase
     firebase.auth().onAuthStateChanged(
       (user) => {
