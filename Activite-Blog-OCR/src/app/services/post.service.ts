@@ -9,6 +9,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 export class PostService {
 
   private apiUrl: String = 'http://localhost:9001';
+
   posts: Post [] = [];
   postsSubject = new Subject<Post[]>();
 
@@ -68,12 +69,13 @@ export class PostService {
           post.loveIts = value.loveIts;
           post.date = value.date;
           post.url = value.url;
-          console.log(post);
+          //Pour debug
+          //console.log(post);
 
           this.posts.push(post);
 
         });
-        console.log(this.posts);
+
       }
     )
     //Pour debug
