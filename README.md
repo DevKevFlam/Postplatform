@@ -1,4 +1,4 @@
-# postplatform
+# Postplatform
 
 Ce projet a pour but de mettre en place une plateforme de publication d'articles avec les technologies et les architectures d'application  les plus courantes du monde du Java.
 Le but est de mettre en place un front-end Angular avec des back-end en Java en utilisant des technologies et/ou architectures différentes.  
