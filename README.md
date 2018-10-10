@@ -6,8 +6,6 @@ Tout d'abord, deux back-end, Java / Spring , un en architecture "Monolithique" e
 
 Ainsi à terme le projet devrait contenir trois branches :  
 
--
-
 - Une branche en archi. "Monolithique"     - Java / Spring
 - Une branche en archi. "Micro-Services"   - Java / Spring
 - Une branche pédagogique - Java / sans Spring 
