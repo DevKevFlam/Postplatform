@@ -10,13 +10,6 @@ import javax.validation.constraints.Size;
 
 @PasswordMatches
 public class UserDto {
-    @NotNull
-    @Size(min = 1, message = "{Size.userDto.firstName}")
-    private String firstName;
-
-    @NotNull
-    @Size(min = 1, message = "{Size.userDto.lastName}")
-    private String lastName;
 
     @ValidPassword
     private String password;
@@ -30,7 +23,8 @@ public class UserDto {
     @Size(min = 1, message = "{Size.userDto.email}")
     private String email;
 
-    private boolean isUsing2FA;
+    // Pour double Auth
+    // private boolean isUsing2FA;
 
     public String getEmail() {
         return email;
@@ -50,22 +44,6 @@ public class UserDto {
         this.role = role;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -81,7 +59,7 @@ public class UserDto {
     public void setMatchingPassword(final String matchingPassword) {
         this.matchingPassword = matchingPassword;
     }
-
+/*
     public boolean isUsing2FA() {
         return isUsing2FA;
     }
@@ -89,12 +67,12 @@ public class UserDto {
     public void setUsing2FA(boolean isUsing2FA) {
         this.isUsing2FA = isUsing2FA;
     }
-
+*/
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("UserDto [firstName=").append(firstName).append(", lastName=").append(lastName).append(", password=").append(password).append(", matchingPassword=").append(matchingPassword).append(", email=").append(email).append(", isUsing2FA=")
-                .append(isUsing2FA).append(", role=").append(role).append("]");
+        builder.append(", password=").append(password).append(", matchingPassword=").append(matchingPassword).append(", email=").append(email)/*.append(", isUsing2FA=")
+                .append(isUsing2FA)*/.append(", role=").append(role).append("]");
         return builder.toString();
     }
 

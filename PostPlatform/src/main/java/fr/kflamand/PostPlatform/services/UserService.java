@@ -63,7 +63,9 @@ public class UserService implements IUserService {
 
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
-        user.setUsing2FA(accountDto.isUsing2FA());
+
+        //Double Auth
+        //user.setUsing2FA(accountDto.isUsing2FA());
 
 
         // TODO Re-création du role
