@@ -4,20 +4,11 @@ import fr.kflamand.PostPlatform.persistance.models.Privilege;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.persistance.models.VerificationToken;
 import fr.kflamand.PostPlatform.registration.OnRegistrationCompleteEvent;
+import fr.kflamand.PostPlatform.security.ISecurityUserService;
 import fr.kflamand.PostPlatform.services.IUserService;
 import fr.kflamand.PostPlatform.web.dto.PasswordDto;
 import fr.kflamand.PostPlatform.web.dto.UserDto;
 import fr.kflamand.PostPlatform.web.util.GenericResponse;
-import org.baeldung.OK.persistence.model.Privilege;
-import org.baeldung.OK.persistence.model.User;
-import org.baeldung.OK.persistence.model.VerificationToken;
-import org.baeldung.OK.registration.OnRegistrationCompleteEvent;
-import org.baeldung.OK.service.IUserService;
-import org.baeldung.security.ISecurityUserService;
-import org.baeldung.web.dto.PasswordDto;
-import org.baeldung.web.dto.UserDto;
-import org.baeldung.web.error.InvalidOldPasswordException;
-import org.baeldung.web.util.GenericResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +91,7 @@ public class RegistrationController {
             // model.addAttribute("qr", userService.generateQRUrl(user));
             // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
             // }
-            authWithoutPassword(user);
+            // authWithoutPassword(user);
             model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
             return "redirect:/console.html?lang=" + locale.getLanguage();
         }
