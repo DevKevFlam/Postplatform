@@ -2,13 +2,14 @@ package fr.kflamand.PostPlatform.persistance.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import org.jboss.aerogear.security.otp.api.Base32;
 
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true, nullable = false)
     private long id;
 
     //Encryption + pb de mise en base
@@ -20,10 +21,25 @@ public class User {
     @NotNull
     private String pseudo;
 
-@OneToMany
-private RoleUser roleUser;
+    @ManyToOne
+    private RoleUser roleUser ;
+
+    ///////////////////////////////////////////////////////////////////////
+    //AUTH Attribute
+
+    private boolean enabled;
+
+    private boolean isUsing2FA;
+
+    private String secret;
+
+    ///////////////////////////////////////////////////////////////////////
+    //Constructors
 
     public User() {
+        super();
+        this.secret = Base32.random();
+        this.enabled = false;
     }
 
     public User(String email, String pseudo, String mdp) {
@@ -31,6 +47,9 @@ private RoleUser roleUser;
         this.pseudo = pseudo;
         this.password = mdp;
     }
+
+    /////////////////////////////////////////////////////////////////////////
+    //Getters and Setters
 
     public User(long id) {
         this.id = id;
@@ -74,6 +93,54 @@ private RoleUser roleUser;
 
     public void setRoleUser(RoleUser roleUser) {
         this.roleUser = roleUser;
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    //AUTH Getters and Setters
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isUsing2FA() {
+        return isUsing2FA;
+    }
+
+    public void setUsing2FA(boolean isUsing2FA) {
+        this.isUsing2FA = isUsing2FA;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    //Override methods
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User user = (User) obj;
+        if (!email.equals(user.email)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

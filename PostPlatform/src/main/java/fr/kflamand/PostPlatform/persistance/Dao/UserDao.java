@@ -2,20 +2,21 @@ package fr.kflamand.PostPlatform.persistance.Dao;
 
 import fr.kflamand.PostPlatform.Exception.UserNotFoundException;
 import fr.kflamand.PostPlatform.persistance.models.User;;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(rollbackFor= UserNotFoundException.class)
-public interface UserDao extends /*JpaRepository*/  CrudRepository<User, Long> {
+public interface UserDao extends JpaRepository<User, Long> {
 
-    public User findByEmail(String email);
+    User findByEmail(String email);
+
+    @Override
+    void delete(User user);
 
     @Override
     List<User> findAll();
 
     User findUserByIdEquals ( long id );
-
 
 }

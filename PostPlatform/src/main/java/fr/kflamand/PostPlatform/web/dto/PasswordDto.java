@@ -1,6 +1,7 @@
 package fr.kflamand.PostPlatform.web.dto;
 
-import org.baeldung.validation.ValidPassword;
+
+import fr.kflamand.PostPlatform.validation.ValidPassword;
 
 public class PasswordDto {
 

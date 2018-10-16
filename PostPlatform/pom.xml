@@ -25,6 +25,9 @@
         <start-class>postPlatform.Application</start-class>
         <java.version>1.8</java.version>
 
+        <guava.version>20.0</guava.version>
+        <passay.version>1.0</passay.version>
+        <aerogear.version>1.0.0</aerogear.version>
     </properties>
 
     <dependencies>
@@ -37,6 +40,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -77,6 +86,29 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <!-- Lib for Sign up validator -->
+        <!-- Password Validation -->
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>${passay.version}</version>
+        </dependency>
+
+        <!-- CORE lib for java-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <!-- 2fa -->
+        <dependency>
+            <groupId>org.jboss.aerogear</groupId>
+            <artifactId>aerogear-otp-java</artifactId>
+            <version>${aerogear.version}</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
@@ -127,6 +159,8 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+
 
 
 </project>
