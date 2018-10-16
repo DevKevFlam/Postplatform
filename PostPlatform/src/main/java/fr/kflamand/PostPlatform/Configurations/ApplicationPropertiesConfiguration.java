@@ -14,6 +14,7 @@ public class ApplicationPropertiesConfiguration {
         // TODO limite de post par page
 
 
+
     public static int getLimitDePosts() {
         return limitDePosts;
     }

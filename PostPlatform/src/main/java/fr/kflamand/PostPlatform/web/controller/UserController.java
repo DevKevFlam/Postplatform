@@ -1,11 +1,15 @@
 package fr.kflamand.PostPlatform.web.controller;
 
-import fr.kflamand.PostPlatform.Dao.UserDao;
+import fr.kflamand.PostPlatform.persistance.Dao.RoleDao;
+import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
+import fr.kflamand.PostPlatform.Exception.EmailExistsException;
+import fr.kflamand.PostPlatform.Exception.EmailNotFoundException;
 import fr.kflamand.PostPlatform.Exception.UserNotFoundException;
-import fr.kflamand.PostPlatform.models.User;
+import fr.kflamand.PostPlatform.persistance.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +23,11 @@ public class UserController {
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserDao userDao;
+    private RoleDao roleDao;
 
     // Affiche la liste de tous les Users
     @GetMapping(value = "/Users")
@@ -55,7 +63,22 @@ public class UserController {
 
     @PostMapping("/Users")
     @ResponseBody
-    public void addUser(@RequestBody User user) {
+    public void registerNewUserAccount(@RequestBody User userDto) throws EmailExistsException {
+
+        if (emailExist(userDto.getEmail())) {
+            throw new EmailExistsException(
+                    "There is an account with that email adress:" + userDto.getEmail());
+        }
+
+        User user = new User();
+
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        user.setEmail(userDto.getEmail());
+        user.setPseudo(userDto.getPseudo());
+
+        // TODO Re-création du role
+        user.setRoleUser(user.getRoleUser());
 
         log.info(user.toString());
         userDao.save(user);
@@ -81,5 +104,16 @@ public class UserController {
 
     }
 
+
+    private boolean emailExist(String email) {
+        String existingMail = userDao.findByEmail(email).getEmail();
+        if (email != existingMail){
+            return false;
+        } else if(email == existingMail){
+            return true;
+        } else {
+            throw new EmailNotFoundException("mail fail recherche: UserController.emailExist");
+        }
+    }
 }
 

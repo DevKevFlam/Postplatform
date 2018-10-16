@@ -1,9 +1,9 @@
 package fr.kflamand.PostPlatform.web.controller;
 
 import fr.kflamand.PostPlatform.Configurations.ApplicationPropertiesConfiguration;
-import fr.kflamand.PostPlatform.Dao.PostDao;
+import fr.kflamand.PostPlatform.persistance.Dao.PostDao;
 import fr.kflamand.PostPlatform.Exception.PostNotFoundException;
-import fr.kflamand.PostPlatform.models.Post;
+import fr.kflamand.PostPlatform.persistance.models.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
