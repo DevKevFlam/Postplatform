@@ -1,10 +1,8 @@
-package org.baeldung.registration.listener;
+package fr.kflamand.PostPlatform.registration.listener;
 
-import java.util.UUID;
-
-import org.baeldung.OK.persistence.model.User;
-import org.baeldung.registration.OnRegistrationCompleteEvent;
-import org.baeldung.OK.service.IUserService;
+import fr.kflamand.PostPlatform.persistance.models.User;
+import fr.kflamand.PostPlatform.registration.OnRegistrationCompleteEvent;
+import fr.kflamand.PostPlatform.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -13,8 +11,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+
+    //TODO Check autowired for mail
     @Autowired
     private IUserService service;
 
