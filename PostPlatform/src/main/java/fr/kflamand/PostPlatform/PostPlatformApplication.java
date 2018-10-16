@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.context.request.RequestContextListener;
 
 
 @SpringBootApplication
@@ -19,4 +20,10 @@ public class PostPlatformApplication {
     public Sampler defaultSampler(){
         return Sampler.ALWAYS_SAMPLE;
     }*/
+
+	@Bean
+	public RequestContextListener requestContextListener() {
+		return new RequestContextListener();
+	}
+
 }

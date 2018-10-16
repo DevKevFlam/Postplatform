@@ -1,18 +1,22 @@
 package fr.kflamand.PostPlatform.web.controller;
 
-import fr.kflamand.PostPlatform.persistance.Dao.RoleDao;
-import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
 import fr.kflamand.PostPlatform.Exception.EmailExistsException;
 import fr.kflamand.PostPlatform.Exception.EmailNotFoundException;
 import fr.kflamand.PostPlatform.Exception.UserNotFoundException;
+import fr.kflamand.PostPlatform.persistance.Dao.RoleDao;
+import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
 import fr.kflamand.PostPlatform.persistance.models.User;
+import fr.kflamand.PostPlatform.security.ActiveUserStore;
+import fr.kflamand.PostPlatform.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @RestController
@@ -23,11 +27,34 @@ public class UserController {
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    ActiveUserStore activeUserStore;
+
+    @Autowired
+    IUserService userService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserDao userDao;
     private RoleDao roleDao;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/loggedUsers", method = RequestMethod.GET)
+    public String getLoggedUsers(final Locale locale, final Model model) {
+        model.addAttribute("users", activeUserStore.getUsers());
+        return "users";
+    }
+
+    @RequestMapping(value = "/loggedUsersFromSessionRegistry", method = RequestMethod.GET)
+    public String getLoggedUsersFromSessionRegistry(final Locale locale, final Model model) {
+        model.addAttribute("users", userService.getUsersFromSessionRegistry());
+        return "users";
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Method Perso
+    // TODO Verif Double avec UserService
 
     // Affiche la liste de tous les Users
     @GetMapping(value = "/Users")
@@ -107,9 +134,9 @@ public class UserController {
 
     private boolean emailExist(String email) {
         String existingMail = userDao.findByEmail(email).getEmail();
-        if (email != existingMail){
+        if (email != existingMail) {
             return false;
-        } else if(email == existingMail){
+        } else if (email == existingMail) {
             return true;
         } else {
             throw new EmailNotFoundException("mail fail recherche: UserController.emailExist");
