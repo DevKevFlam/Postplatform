@@ -2,7 +2,7 @@ package fr.kflamand.PostPlatform.Configurations;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-/*
+
 @Component
 @ConfigurationProperties("mes-configs")
 public class ApplicationPropertiesConfiguration {
@@ -35,4 +35,3 @@ public class ApplicationPropertiesConfiguration {
         this.maxPost = maxPost;
     }
 }
-*/

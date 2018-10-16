@@ -20,7 +20,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @PropertySource({ "classpath:persistence.properties" })
-//@ComponentScan({ "org.baeldung.persistence" })
+@ComponentScan({ "fr.kflamand.PostPlatform.persistance" })
 @EnableJpaRepositories(basePackages = "fr.kflamand.PostPlatform.persistance.Dao")
 public class PersistenceJPAConfig {
 
@@ -37,7 +37,7 @@ public class PersistenceJPAConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "org.baeldung.persistence.model" });
+        em.setPackagesToScan(new String[] { "fr.kflamand.PostPlatform.persistance.model" });
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());

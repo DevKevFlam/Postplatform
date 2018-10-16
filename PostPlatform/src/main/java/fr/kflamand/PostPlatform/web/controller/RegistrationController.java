@@ -1,5 +1,6 @@
 package fr.kflamand.PostPlatform.web.controller;
 
+import fr.kflamand.PostPlatform.Exception.InvalidOldPasswordException;
 import fr.kflamand.PostPlatform.persistance.models.Privilege;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.persistance.models.VerificationToken;
