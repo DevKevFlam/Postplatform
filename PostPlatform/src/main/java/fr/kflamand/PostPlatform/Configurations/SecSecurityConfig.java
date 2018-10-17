@@ -77,14 +77,17 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         // @formatter:off
         http
-            .csrf().disable()
+            .csrf().disable()/*
             .authorizeRequests()
                 .antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
                         "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
                         "/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
                         "/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*").permitAll()
+
                 .antMatchers("/invalidSession*").anonymous()
+
                 .antMatchers("/user/updatePassword*","/user/savePassword*","/updatePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+
                 .anyRequest().hasAuthority("READ_PRIVILEGE")
                 .and()
             .formLogin()
@@ -92,9 +95,9 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/homepage.html")
                 .failureUrl("/login?error=true")
                 .successHandler(myAuthenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
+                .failureHandler(authenticationFailureHandler)*/
                 /*.authenticationDetailsSource(authenticationDetailsSource)*/
-            .permitAll()
+           /* .permitAll()
                 .and()
             .sessionManagement()
                 .invalidSessionUrl("/invalidSession.html")
@@ -106,7 +109,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(false)
                 .logoutSuccessUrl("/logout.html?logSucc=true")
                 .deleteCookies("JSESSIONID")
-                .permitAll();
+                .permitAll();*/
              /*.and()
                 .rememberMe().rememberMeServices(rememberMeServices()).key("theKey");*/
     // @formatter:on

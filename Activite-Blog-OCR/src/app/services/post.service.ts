@@ -34,7 +34,7 @@ export class PostService {
   }
 
 
-  ////////////////////////////////////HTTP Request for PostPlatform: POST, PATCH, DELETE
+  //////////////////////////////////// HTTP Request for PostPlatform: POST, PATCH, DELETE
   //OK
   private savePosts() {
     const objectObservable = this.http.post(this.apiUrl + '/Posts', this.posts[this.posts.length - 1], this.httpOptions).pipe();
@@ -53,8 +53,8 @@ export class PostService {
     return objectObservable;
   }
 
-  ///////////////////////////////////HTTP Request for PostPlatform: GET
-  //OK
+  /////////////////////////////////// HTTP Request for PostPlatform: GET
+  // OK
   getPosts() {
 
     // Ok reconstruction de la list Users
@@ -78,12 +78,12 @@ export class PostService {
 
       }
     )
-    //Pour debug
-    //console.log(this.posts);
+    // Pour debug
+    // console.log(this.posts);
     this.emitPosts();
   }
 
-  //OK
+  // OK
   getSinglePost(id: number): Post {
     this.postEnCour = new Post('', '', '');
     this.http.get<Post>(this.apiUrl + '/Posts/' + (id)).toPromise().then(
@@ -99,7 +99,7 @@ export class PostService {
 
           if (this.postEnCour.title === '' || this.postEnCour.title === null) {
             // TODO Post introuvable exception
-            console.log("Post introuvable exception!!!")
+            console.log('Post introuvable exception!!!');
           }
 
       }
@@ -109,7 +109,7 @@ export class PostService {
   }
 
   ////////////////////////////////////
-  //OK
+  // OK
   createNewPost(newPost: Post) {
     // TODO Renseigner newPost.poster
     newPost.date = Date.now();
@@ -119,7 +119,7 @@ export class PostService {
     this.emitPosts();
   }
 
-  //OK
+  // OK
   updatePost(post: Post, id: number) {
     this.posts[post.id] = post;
     post.date = Date.now();
@@ -127,7 +127,7 @@ export class PostService {
     this.emitPosts();
   }
 
-  //OK
+  // OK
   removePost(post: Post) {
     const bookIndexToRemove = this.posts.findIndex(
       (postEl) => {
@@ -141,7 +141,7 @@ export class PostService {
     this.emitPosts();
   }
 
-  //OK
+  // OK
   removePostById(id: number) {
     this.posts.splice(id, 1);
     this.deletePost(id).subscribe();

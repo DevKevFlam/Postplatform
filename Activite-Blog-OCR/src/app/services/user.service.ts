@@ -30,7 +30,7 @@ export class UserService {
   }
 
   emitUserEnCour() {
-    //this.userSubject.next(this.userEnCour);
+    // this.userSubject.next(this.userEnCour);
   }
 
   //////////////////////////////////// HTTP Request for PostPlatform: POST, PATCH, DELETE
@@ -40,7 +40,7 @@ export class UserService {
     return objectObservable;
   }
 
-  //OK
+  // OK
   private updateUsers(id: number) {
     const objectObservable = this.http.patch(this.apiUrl + '/Users', this.users[id], this.httpOptions).pipe();
     return objectObservable;
@@ -58,7 +58,7 @@ export class UserService {
           let user: User;
           user = new User(value.email, value.pseudo);
           user.id = value.id;
-          user.mdp = "";//value.mdp;
+          user.mdp = "";// value.mdp;
           //Pour debug
           //console.log(user);
 
