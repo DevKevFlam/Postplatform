@@ -86,6 +86,8 @@ public class RegistrationController {
         return new GenericResponse("success");
     }
 
+
+    //TODO Check for redirect
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
         Locale locale = request.getLocale();
