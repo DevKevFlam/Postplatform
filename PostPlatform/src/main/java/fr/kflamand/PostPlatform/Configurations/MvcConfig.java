@@ -33,6 +33,7 @@ public class MvcConfig implements WebMvcConfigurer {
     //TODO Rooter path
     @Override
     public void addViewControllers(final ViewControllerRegistry registry) {
+        /*
         registry.addViewController("/").setViewName("forward:/login");
         registry.addViewController("/login");
         registry.addViewController("/loginRememberMe");
@@ -54,6 +55,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/changePassword.html");
         registry.addViewController("/users.html");
         registry.addViewController("/qrcode.html");
+        */
     }
 
     @Override

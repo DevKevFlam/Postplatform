@@ -34,7 +34,7 @@ import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
-
+/*
 @Controller
 @RequestMapping(value = "/old")
 public class OldRegistrationController {
@@ -223,3 +223,4 @@ public class OldRegistrationController {
         return email;
     }
 }
+*/

@@ -22,7 +22,7 @@ public class RoleUser {
     @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
 
-    public RoleUser(long id, @NotNull String libelle) {
+    public RoleUser(Long id, @NotNull String libelle) {
         this.id = id;
         this.name = libelle;
     }
@@ -34,11 +34,11 @@ public class RoleUser {
     public RoleUser() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

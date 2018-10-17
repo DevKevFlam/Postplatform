@@ -1,15 +1,16 @@
 package fr.kflamand.PostPlatform.persistance.models;
 
+import org.jboss.aerogear.security.otp.api.Base32;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import org.jboss.aerogear.security.otp.api.Base32;
 
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id", unique = true)
     private long id;
 
     //Encryption + pb de mise en base
@@ -22,7 +23,7 @@ public class User {
     private String pseudo;
 
     @ManyToOne
-    private RoleUser roleUser ;
+    private RoleUser roleUser;
 
     ///////////////////////////////////////////////////////////////////////
     //AUTH Attribute
@@ -36,7 +37,7 @@ public class User {
     ///////////////////////////////////////////////////////////////////////
     //Constructors
 
-    public User() {
+     public User() {
         super();
         this.secret = Base32.random();
         this.enabled = false;
@@ -48,12 +49,12 @@ public class User {
         this.password = mdp;
     }
 
-    /////////////////////////////////////////////////////////////////////////
-    //Getters and Setters
-
     public User(long id) {
         this.id = id;
     }
+
+    /////////////////////////////////////////////////////////////////////////
+    //Getters and Setters
 
     public long getId() {
         return id;

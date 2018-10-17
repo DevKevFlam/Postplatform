@@ -3,6 +3,7 @@ package fr.kflamand.PostPlatform.registration.listener;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.registration.OnRegistrationCompleteEvent;
 import fr.kflamand.PostPlatform.services.IUserService;
+import fr.kflamand.PostPlatform.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -17,10 +18,11 @@ import java.util.UUID;
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
     //TODO Check autowired for mail
-    @Autowired
-    private IUserService service;
+    @Autowired(required = false)
+    private UserService service;
+    //private IUserService service;
 
-    @Autowired
+    @Autowired(required = false)
     private MessageSource messages;
 
     @Autowired

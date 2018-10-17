@@ -7,12 +7,14 @@ import fr.kflamand.PostPlatform.persistance.models.VerificationToken;
 import fr.kflamand.PostPlatform.registration.OnRegistrationCompleteEvent;
 import fr.kflamand.PostPlatform.security.ISecurityUserService;
 import fr.kflamand.PostPlatform.services.IUserService;
+import fr.kflamand.PostPlatform.services.UserService;
 import fr.kflamand.PostPlatform.web.dto.PasswordDto;
 import fr.kflamand.PostPlatform.web.dto.UserDto;
 import fr.kflamand.PostPlatform.web.util.GenericResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -47,6 +49,8 @@ public class RegistrationController {
 
     @Autowired
     private IUserService userService;
+    //private UserService userService;
+
 
     @Autowired
     private ISecurityUserService securityUserService;

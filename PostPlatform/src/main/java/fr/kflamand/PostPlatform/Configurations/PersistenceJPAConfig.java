@@ -1,5 +1,5 @@
 package fr.kflamand.PostPlatform.Configurations;
-
+/*
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -44,6 +44,7 @@ public class PersistenceJPAConfig {
         return em;
     }
 
+
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -53,6 +54,7 @@ public class PersistenceJPAConfig {
         dataSource.setPassword(env.getProperty("jdbc.pass"));
         return dataSource;
     }
+
 
     @Bean
     public JpaTransactionManager transactionManager() {
@@ -65,7 +67,7 @@ public class PersistenceJPAConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-
+/*
     protected Properties additionalProperties() {
         final Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
@@ -73,3 +75,4 @@ public class PersistenceJPAConfig {
     }
 
 }
+*/
