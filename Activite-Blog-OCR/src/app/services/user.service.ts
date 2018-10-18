@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {User} from '../models/user.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {UserDto} from "../models/userDto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +59,9 @@ export class UserService {
           let user: User;
           user = new User(value.email, value.pseudo);
           user.id = value.id;
-          user.mdp = "";// value.mdp;
-          //Pour debug
-          //console.log(user);
+          user.mdp = '' // value.mdp;
+          // Pour debug
+          // console.log(user);
 
           this.users.push(user);
 
@@ -73,7 +74,7 @@ export class UserService {
     this.emitUsers();
   }
 
-  getSingleUser(id: number): User {
+  getSingleUserById(id: number): User {
     this.userEnCour = new User('', '');
 
     this.http.get<User>(this.apiUrl + '/Users/' + (id)).toPromise().then(
@@ -85,7 +86,27 @@ export class UserService {
 
         if (this.userEnCour.email === '' || this.userEnCour.email === null) {
           // TODO User introuvable exception
-          console.log("User introuvable exception!!!")
+          console.log("User introuvable exception!!!");
+        }
+      }
+    );
+    this.emitUserEnCour();
+    return this.userEnCour;
+  }
+
+  getSingleUserByEmail(email: string): User {
+    this.userEnCour = new User('', '');
+
+    this.http.get<User>(this.apiUrl + '/Users/' + (email)).toPromise().then(
+      data => {
+        this.userEnCour.id = data.id;
+        this.userEnCour.pseudo = data.pseudo;
+        this.userEnCour.email = data.email;
+        this.userEnCour.mdp = data.mdp;
+
+        if (this.userEnCour.email === '' || this.userEnCour.email === null) {
+          // TODO User introuvable exception
+          console.log("User introuvable exception!!!");
         }
       }
     );
@@ -95,9 +116,21 @@ export class UserService {
 
   ////////////////////////////////////
 
-  createNewUser(newUser: User) {
-    // TODO Traiter le mdp
+  createNewUser(newUserDto: UserDto) {
+
+    const newUser: User = this.getSingleUserByEmail(newUserDto.email)
     newUser.id = 0;
+    this.users.push(newUser);
+    this.saveUsers().subscribe();
+    this.emitUsers();
+
+  }
+
+  createNewUserDto(newUserDto: UserDto) {
+
+ const newUser: User = new User(newUserDto.email, newUserDto.pseudo);
+
+
     this.users.push(newUser);
     this.saveUsers().subscribe();
     this.emitUsers();

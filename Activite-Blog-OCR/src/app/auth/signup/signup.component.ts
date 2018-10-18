@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {User} from '../../models/user.model';
 import {Subscription} from 'rxjs';
+import {UserDto} from "../../models/userDto.model";
 
 @Component({
   selector: 'app-signup',
@@ -65,10 +66,15 @@ export class SignupComponent implements OnInit , OnDestroy {
     const email = this.signUpForm.get('email').value;
     const pseudo = this.signUpForm.get('pseudo').value;
     const password = this.signUpForm.get('password').value;
+    // TODO ajout d'un champ de verif du password
+    const matchingPassword = this.signUpForm.get('password').value;
 
-    const user: User = new User(email, pseudo);
-    user.mdp = password;
-    this.userService.createNewUser(user);
+    const user: UserDto = new UserDto();
+
+    user.email = email;
+    user.pseudo = pseudo;
+    user.password = password;
+    user.matchingPassword = matchingPassword;
     this.authService.createNewUser(user).then(
       () => {
         // TODO gestion de l'authentification et MDP

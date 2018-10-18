@@ -31,7 +31,7 @@ export class UpdatePostComponent implements OnInit {
         this.post = post;
       }
     );
-    this.post = this.postService.getSinglePost(+id);
+    this.post = this.postService.getSinglePostById(+id);
     this.initForm();
   }
 

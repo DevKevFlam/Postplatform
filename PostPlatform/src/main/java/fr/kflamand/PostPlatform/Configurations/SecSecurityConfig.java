@@ -79,7 +79,9 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Set default configurations from Spring Security
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/Posts","/Posts/{id}","/Users","/Users/{id}").permitAll()
-                .antMatchers( "/Posts/loveIts").permitAll() //TODO bloqué a un seul acces
+                .antMatchers(HttpMethod.POST, "/user/registration").permitAll()
+                //TODO bloqué a un seul acces
+                .antMatchers( "/Posts/loveIts").permitAll()
                 .antMatchers(HttpMethod.POST, "/Posts").authenticated()  // TODO Limité acces au poster corespondant
                 .antMatchers(HttpMethod.PATCH, "/Posts").authenticated() // TODO Limité acces au poster corespondant
                 .antMatchers(HttpMethod.DELETE, "/Posts/{id}").authenticated()
@@ -102,8 +104,8 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anonymous()
 
                 .antMatchers("/user/updatePassword*", "/user/savePassword*", "/updatePassword*")
-                .hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-                .anyRequest().hasAuthority("READ_PRIVILEGE")
+                .hasAuthority("CHANGE_PASSWORD")
+                .anyRequest().hasAuthority("READ")
                 .and()
                 .formLogin()
                 .loginPage("/login")

@@ -1,36 +1,42 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {UserService} from '../services/user.service';
-import {User} from '../models/user.model';
+import {UserDto} from "../models/userDto.model";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Post} from "../models/post.model";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  users: UserDto [] = [];
+  usersDtoSubject = new Subject<UserDto[]>();
+
+  private apiUrl: String = 'http://localhost:9001';
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  };
 
   // TODO liaison avec Spring Security et Service Auth from PostPlatform BAckend
 
-  constructor(private serviceUser: UserService) {
+  constructor(private serviceUser: UserService, private http: HttpClient) {
 
   }
 
-  private apiUrl: String ;
+  private registerUserAccount(user: UserDto) {
+    const objectObservable = this.http.post(this.apiUrl + '/user/registration', user, this.httpOptions).pipe();
+    return objectObservable;
+  }
 
+  createNewUser(user: UserDto) {
 
-  createNewUser(user: User) {
-/*
     return new Promise(
-      (resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword( user.email , user.mdp).then(
-          () => {
-            resolve();
-          },
-          (error) => {
-            reject(error);
-          }
-        );
-      }
-    );*/
+
+        this.registerUserAccount(user).subscribe );
   }
 
   signInUser(email: string, password: string) {
@@ -50,6 +56,6 @@ export class AuthService {
   }
 
   signOutUser() {
-   /* firebase.auth().signOut();*/
+    /* firebase.auth().signOut();*/
   }
 }

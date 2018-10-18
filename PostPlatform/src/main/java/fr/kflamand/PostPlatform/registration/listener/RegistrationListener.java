@@ -18,11 +18,11 @@ import java.util.UUID;
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
     //TODO Check autowired for mail
-    @Autowired(required = false)
+    @Autowired
     private UserService service;
     //private IUserService service;
 
-    @Autowired(required = false)
+    @Autowired
     private MessageSource messages;
 
     @Autowired

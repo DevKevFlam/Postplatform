@@ -89,6 +89,27 @@ public class UserController {
         return user;
     }
 
+
+    //Récuperer un user par son id
+    @GetMapping(value = "/Users/{email}")
+    @ResponseBody
+    public User getOneUserByEmail(@PathVariable String email) {
+
+        User userOp = userDao.findByEmail(email);
+
+        if (userOp == null) {
+            log.info("User not found");
+            //TODO Throw exception
+            throw new UserNotFoundException("Le user correspondant à l'email " + email + " n'existe pas");
+        }
+
+        if (userOp.getEmail() == email && (userOp.getPseudo()=="" || userOp.getPseudo() == null)) {
+            throw new UserNotFoundException("Le user correspondant à l'email" + email + " n'existe pas");
+        }
+
+        return userOp;
+    }
+/*
     @PostMapping("/Users")
     @ResponseBody
     public void registerNewUserAccount(@RequestBody User userDto) throws EmailExistsException {
@@ -112,7 +133,7 @@ public class UserController {
         userDao.save(user);
 
     }
-
+*/
 
     @PatchMapping("/Users")
     @ResponseBody

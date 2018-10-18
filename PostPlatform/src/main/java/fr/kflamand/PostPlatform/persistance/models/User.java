@@ -14,7 +14,7 @@ public class User {
     @Column(name = "id", unique = true)
     private long id;
 
-    //Encryption + pb de mise en base
+
     private String password;
 
     @NotNull
@@ -51,6 +51,8 @@ public class User {
         this.email = email;
         this.pseudo = pseudo;
         this.password = mdp;
+        this.secret = Base32.random();
+        this.enabled = false;
     }
 
     public User(long id) {

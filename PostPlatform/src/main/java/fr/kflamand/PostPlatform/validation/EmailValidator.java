@@ -10,6 +10,8 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     private Matcher matcher;
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
     @Override
     public void initialize(final ValidEmail constraintAnnotation) {
     }
@@ -20,8 +22,8 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     }
 
     private boolean validateEmail(final String email) {
-        pattern = Pattern.compile(EMAIL_PATTERN);
-        matcher = pattern.matcher(email);
-        return matcher.matches();
+        //pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return  matcher.find();
     }
 }

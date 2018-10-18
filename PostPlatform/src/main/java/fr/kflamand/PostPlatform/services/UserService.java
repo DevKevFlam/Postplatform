@@ -52,6 +52,7 @@ public class UserService implements IUserService {
     public static String APP_NAME = "SpringRegistration";
     */
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
 
     @Override
@@ -63,13 +64,14 @@ public class UserService implements IUserService {
 
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
+        user.setPseudo(accountDto.getPseudo());
 
         //Double Auth
         //user.setUsing2FA(accountDto.isUsing2FA());
 
 
         // TODO Re-création du role
-        user.setRoleUser(/*roleDao.findByName("ROLE_USER")*/ new RoleUser("USER"));
+        user.setRoleUser(roleDao.findByName("USER"));
 
         return userDao.save(user);
     }

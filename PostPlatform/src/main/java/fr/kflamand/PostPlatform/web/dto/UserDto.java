@@ -8,17 +8,22 @@ import fr.kflamand.PostPlatform.validation.ValidPassword;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@PasswordMatches
+//  @PasswordMatches
 public class UserDto {
 
-    @ValidPassword
+//    @ValidPassword
+    @NotNull
     private String password;
 
     @NotNull
     @Size(min = 1)
     private String matchingPassword;
 
-    @ValidEmail
+    @NotNull
+    @Size(min = 1, message = "{Size.userDto.pseudo}")
+    private String pseudo;
+
+//    @ValidEmail
     @NotNull
     @Size(min = 1, message = "{Size.userDto.email}")
     private String email;
@@ -32,6 +37,14 @@ public class UserDto {
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     private Integer role;

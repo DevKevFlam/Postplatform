@@ -1,20 +1,17 @@
 package fr.kflamand.PostPlatform.web.controller;
 
 import fr.kflamand.PostPlatform.Exception.InvalidOldPasswordException;
-import fr.kflamand.PostPlatform.persistance.models.Privilege;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.persistance.models.VerificationToken;
 import fr.kflamand.PostPlatform.registration.OnRegistrationCompleteEvent;
 import fr.kflamand.PostPlatform.security.ISecurityUserService;
 import fr.kflamand.PostPlatform.services.IUserService;
-import fr.kflamand.PostPlatform.services.UserService;
 import fr.kflamand.PostPlatform.web.dto.PasswordDto;
 import fr.kflamand.PostPlatform.web.dto.UserDto;
 import fr.kflamand.PostPlatform.web.util.GenericResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -23,11 +20,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,13 +29,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @CrossOrigin("http://localhost:4200")
-@Controller
+@RestController
 public class RegistrationController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -74,13 +66,13 @@ public class RegistrationController {
 
     // Registration
 
-    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+    @PostMapping(value = "/user/registration")
     @ResponseBody
-    public GenericResponse registerUserAccount(@Valid final UserDto accountDto, final HttpServletRequest request) {
+    public GenericResponse registerUserAccount(@RequestBody @Valid final UserDto accountDto, final HttpServletRequest request) {
         LOGGER.debug("Registering user account with information: {}", accountDto);
-
+        System.out.println("///////////////////////////////////////////////////////////////////////////////////////////////" + accountDto.toString());
         final User registered = userService.registerNewUserAccount(accountDto);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
         return new GenericResponse("success");
     }
 

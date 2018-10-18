@@ -41,7 +41,7 @@ export class PostService {
   private savePosts() {
     const objectObservable = this.http.post(this.apiUrl + '/Posts', this.posts[this.posts.length - 1], this.httpOptions).pipe();
     return objectObservable;
-  }
+}
 
   // OK
   private updatePosts(id: number) {
@@ -91,7 +91,7 @@ export class PostService {
   }
 
   // OK
-  getSinglePost(id: number): Post {
+  getSinglePostById(id: number): Post {
     this.postEnCour = new Post('', '');
     this.http.get<Post>(this.apiUrl + '/Posts/' + (id)).toPromise().then(
       data => {

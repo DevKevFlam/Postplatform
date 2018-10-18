@@ -23,7 +23,7 @@ export class UserItemComponent implements OnInit {
     this.user = new User('','');
     const id = this.route.snapshot.params['id'];
     console.log(id);
-    this.user = this.userService.getSingleUser(id);
+    this.user = this.userService.getSingleUserById(id);
     /*
     firebase.auth().onAuthStateChanged(
       (user) => {
