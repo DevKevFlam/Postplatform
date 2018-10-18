@@ -29,10 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +40,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@CrossOrigin("http://localhost:4200")
 @Controller
 public class RegistrationController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());

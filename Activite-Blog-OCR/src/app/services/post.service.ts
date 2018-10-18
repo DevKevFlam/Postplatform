@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Post} from '../models/post.model';
 import {Subject} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 export class PostService {
 
   private apiUrl: String = 'http://localhost:9001';
+  private userService: UserService;
 
   posts: Post [] = [];
   postsSubject = new Subject<Post[]>();
@@ -35,19 +37,25 @@ export class PostService {
 
 
   //////////////////////////////////// HTTP Request for PostPlatform: POST, PATCH, DELETE
-  //OK
+  // OK
   private savePosts() {
     const objectObservable = this.http.post(this.apiUrl + '/Posts', this.posts[this.posts.length - 1], this.httpOptions).pipe();
     return objectObservable;
   }
 
-  //OK
+  // OK
   private updatePosts(id: number) {
     const objectObservable = this.http.patch(this.apiUrl + '/Posts', this.posts[id], this.httpOptions).pipe();
     return objectObservable;
   }
 
-  //Ok
+  // OK
+  private updateLoveItsPosts(id: number) {
+    const objectObservable = this.http.patch(this.apiUrl + '/Posts/loveIts', this.posts[id], this.httpOptions).pipe();
+    return objectObservable;
+  }
+
+  // Ok
   private deletePost(id: number) {
     const objectObservable = this.http.delete(this.apiUrl + '/Posts/' + id, this.httpOptions).pipe();
     return objectObservable;
@@ -64,16 +72,15 @@ export class PostService {
         data.forEach(value => {
 
           let post: Post;
-          post = new Post(value.title, value.contenu, value.poster);
+          post = new Post(value.title, value.contenu);
+          post.poster = 'Test.recontruction@AllPost'; // TODO récupérer email poster
           post.id = value.id;
           post.loveIts = value.loveIts;
           post.date = value.date;
           post.url = value.url;
-          //Pour debug
-          //console.log(post);
-
+          // Pour debug
+          // console.log(post);
           this.posts.push(post);
-
         });
 
       }
@@ -85,23 +92,22 @@ export class PostService {
 
   // OK
   getSinglePost(id: number): Post {
-    this.postEnCour = new Post('', '', '');
+    this.postEnCour = new Post('', '');
     this.http.get<Post>(this.apiUrl + '/Posts/' + (id)).toPromise().then(
       data => {
 
         this.postEnCour.id = data.id;
         this.postEnCour.title = data.title;
         this.postEnCour.contenu = data.contenu;
-        this.postEnCour.poster = data.poster;
+        this.postEnCour.poster = 'Test.recontruction@singlePost'; // TODO récupérer email poster
         this.postEnCour.url = data.url;
         this.postEnCour.date = data.date;
         this.postEnCour.loveIts = data.loveIts;
 
-          if (this.postEnCour.title === '' || this.postEnCour.title === null) {
-            // TODO Post introuvable exception
-            console.log('Post introuvable exception!!!');
-          }
-
+        if (this.postEnCour.title === '' || this.postEnCour.title === null) {
+          // TODO Post introuvable exception
+          console.log('Post introuvable exception!!!');
+        }
       }
     )
     this.emitPostEnCour();
@@ -124,6 +130,14 @@ export class PostService {
     this.posts[post.id] = post;
     post.date = Date.now();
     this.updatePosts(id).subscribe();
+    this.emitPosts();
+  }
+
+  // OK
+  updateLoveItsPost(post: Post, id: number) {
+    // TODO bloqué autre modif que les loveits
+    this.posts[post.id] = post;
+    this.updateLoveItsPosts(id).subscribe();
     this.emitPosts();
   }
 

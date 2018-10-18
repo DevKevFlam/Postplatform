@@ -21,8 +21,8 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String contenu;
 
-    @OneToMany
-    private Collection<User> poster;
+    @ManyToOne
+    private User poster;
 
     //TODO comentaire
 

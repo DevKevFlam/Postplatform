@@ -3,7 +3,6 @@ import {Post} from '../models/post.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PostService} from '../services/post.service';
-import * as firebase from 'firebase';
 import {Subscription} from "rxjs";
 
 @Component({
@@ -50,21 +49,27 @@ export class UpdatePostComponent implements OnInit {
       && this.postForm.get('title').value !== ''
       && this.postForm.get('title').value !== null) {
       this.post.title = this.postForm.get('title').value;
-      this.post.poster = firebase.auth().currentUser.email;
+      // TODO recup email user du post
+      // this.post.poster = firebase.auth().currentUser.email;
+      this.post.poster = 'mail FIXE Update';
     }
 
     if (this.postForm.get('contenu').value !== this.post.contenu
       && this.postForm.get('contenu').value !== ''
       && this.postForm.get('contenu').value !== null) {
       this.post.contenu = this.postForm.get('contenu').value;
-      this.post.poster = firebase.auth().currentUser.email;
+      // TODO recup email user du post
+      // this.post.poster = firebase.auth().currentUser.email;
+      this.post.poster = 'mail FIXE Update';
     }
 
     if (this.postForm.get('url').value !== this.post.contenu
       && this.postForm.get('url').value !== ''
       && this.postForm.get('url').value !== null) {
       this.post.url = this.postForm.get('url').value;
-      this.post.poster = firebase.auth().currentUser.email;
+      // TODO recup email user du post
+      // this.post.poster = firebase.auth().currentUser.email;
+      this.post.poster = 'mail FIXE Update';
     }
 
     this.postService.updatePost(this.post, id);

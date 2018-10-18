@@ -5,7 +5,7 @@ export class User {
   constructor(public email: string, public pseudo: string) {
   }
 
-  toJson(){
+  toJson() {
     return  '{"id":' + this.id +
             ',"email":"' + this.email +
             '","pseudo":"' + this.pseudo +

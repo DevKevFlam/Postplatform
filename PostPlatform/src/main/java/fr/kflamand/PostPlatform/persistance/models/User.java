@@ -4,6 +4,7 @@ import org.jboss.aerogear.security.otp.api.Base32;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @Entity
 public class User {
@@ -24,6 +25,9 @@ public class User {
 
     @ManyToOne
     private RoleUser roleUser;
+
+    @OneToMany(mappedBy = "poster")
+    private Collection<Post> posts;
 
     ///////////////////////////////////////////////////////////////////////
     //AUTH Attribute

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin("http://localhost:4200")
 @RestController
 public class PostController {
 
@@ -72,6 +73,17 @@ public class PostController {
     @PatchMapping("/Posts")
     @ResponseBody
     public void updatePost(@RequestBody Post post) {
+
+        log.info(post.toString());
+        postsDao.save(post);
+
+    }
+
+    @PatchMapping("/Posts/loveIts")
+    @ResponseBody
+    public void updateLoveItsPost(@RequestBody Post post) {
+
+        // TODO Bloqué modif autre que loveIts
 
         log.info(post.toString());
         postsDao.save(post);

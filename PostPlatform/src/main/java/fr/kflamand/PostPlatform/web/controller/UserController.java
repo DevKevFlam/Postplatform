@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+@CrossOrigin("http://localhost:4200")
 @RestController
 public class UserController {
 

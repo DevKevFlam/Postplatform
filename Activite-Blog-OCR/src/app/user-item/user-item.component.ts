@@ -4,7 +4,6 @@ import {User} from "../models/user.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PostService} from "../services/post.service";
 import {UserService} from "../services/user.service";
-import * as firebase from "firebase";
 
 @Component({
   selector: 'app-user-item',

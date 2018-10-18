@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +9,15 @@ export class AppComponent {
 
   constructor() {
 // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyAtQTkJ2ITlZ9B86JybvKy_VgQ44IoHLlg",
-      authDomain: "blog-ocr-post.firebaseapp.com",
-      databaseURL: "https://blog-ocr-post.firebaseio.com",
-      projectId: "blog-ocr-post",
-      storageBucket: "",
-      messagingSenderId: "976487636365"
-    };
-    firebase.initializeApp(config);
+//     var config = {
+//       apiKey: "AIzaSyAtQTkJ2ITlZ9B86JybvKy_VgQ44IoHLlg",
+//       authDomain: "blog-ocr-post.firebaseapp.com",
+//       databaseURL: "https://blog-ocr-post.firebaseio.com",
+//       projectId: "blog-ocr-post",
+//       storageBucket: "",
+//       messagingSenderId: "976487636365"
+//     };
+//     firebase.initializeApp(config);
   }
 
 }

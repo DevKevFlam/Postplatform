@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import * as firebase from 'firebase';
+
 import {AuthService} from '../services/auth.service';
 
 @Component({
@@ -15,15 +15,17 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    firebase.auth().onAuthStateChanged(
-      (user) => {
-        if (user) {
-          this.isAuth = true;
-        } else {
-          this.isAuth = false;
-        }
-      }
-    );
+    // TODO recup session
+    // firebase.auth().onAuthStateChanged(
+    //   (user) => {
+    //     if (user) {
+    //       this.isAuth = true;
+    //     } else {
+    //       this.isAuth = false;
+    //     }
+    //   }
+    // );
+    this.isAuth = true;
   }
 
   onSignOut() {

@@ -3,7 +3,6 @@ import {Post} from '../models/post.model';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {PostService} from '../services/post.service';
-import * as firebase from 'firebase';
 
 
 @Component({
@@ -27,15 +26,16 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.posts = posts;
       }
     );
-    firebase.auth().onAuthStateChanged(
-      (user) => {
-        if (user) {
-          this.isAuth = true;
-        } else {
-          this.isAuth = false;
-        }
-      }
-    );
+    // firebase.auth().onAuthStateChanged(
+    //   (user) => {
+    //     if (user) {
+    //       this.isAuth = true;
+    //     } else {
+    //       this.isAuth = false;
+    //     }
+    //   }
+    // );
+    this.isAuth = true;
     this.postsService.getPosts();
     this.postsService.emitPosts();
   }

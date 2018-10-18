@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Post} from '../models/post.model';
 import {PostService} from '../services/post.service';
 import {Router} from '@angular/router';
-import * as firebase from 'firebase';
 import {User} from "../models/user.model";
 import {Subscription} from "rxjs";
 
@@ -55,12 +54,20 @@ export class NewPostComponent implements OnInit , OnDestroy {
     const title = this.postForm.get('title').value;
     const contenu = this.postForm.get('contenu').value;
     if (this.postForm.get('url')) {
-      this.newPost = new Post(title , contenu, firebase.auth().currentUser.email );
+      // TODO Enregistrement nouveau post
+      // this.newPost = new Post(title , contenu, firebase.auth().currentUser.email
+      this.newPost = new Post(title , contenu
+      );
+      this.newPost.url = 'mail.type@test.newpost-avecSource';
       this.newPost.url = this.postForm.get('url').value;
     } else {
-      this.newPost = new Post(title , contenu, firebase.auth().currentUser.email );
+      // TODO Enregistrement nouveau post
+      // this.newPost = new Post(title , contenu, firebase.auth().currentUser.email
+      this.newPost = new Post(title , contenu
+      );
+      this.newPost.url = 'mail.type@test.newpost-sansSource';
     }
     this.postService.createNewPost(this.newPost);
-    //this.router.navigate(['/posts']);
+    this.router.navigate(['/posts']);
   }
 }

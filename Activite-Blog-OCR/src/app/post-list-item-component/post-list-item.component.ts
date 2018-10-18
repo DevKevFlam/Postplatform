@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Post} from '../models/post.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PostService} from '../services/post.service';
-import * as firebase from 'firebase';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -30,15 +29,16 @@ export class PostListItemComponent implements OnInit {
     this.post = this.postService.getSinglePost(+id);
 
     // TODO Init isAuth sans firebase
-    firebase.auth().onAuthStateChanged(
-      (user) => {
-        if (user) {
-          this.isAuth = true;
-        } else {
-          this.isAuth = false;
-        }
-      }
-    );
+    // firebase.auth().onAuthStateChanged(
+    //   (user) => {
+    //     if (user) {
+    //       this.isAuth = true;
+    //     } else {
+    //       this.isAuth = false;
+    //     }
+    //   }
+    // );
+    this.isAuth = true;
   }
 
   onBack() {
@@ -48,13 +48,13 @@ export class PostListItemComponent implements OnInit {
   onLoveIt() {
     const id = this.route.snapshot.params['id'];
     this.post.loveIts = this.post.loveIts + 1;
-   this.postService.updatePost(this.post, id);
+   this.postService.updateLoveItsPost(this.post, id);
   }
 
   onDontLoveIt() {
     const id = this.route.snapshot.params['id'];
     this.post.loveIts = this.post.loveIts - 1;
-    this.postService.updatePost(this.post, id);
+    this.postService.updateLoveItsPost(this.post, id);
   }
 
   onDelete() {

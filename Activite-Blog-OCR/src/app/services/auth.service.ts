@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase';
 import {UserService} from '../services/user.service';
 import {User} from '../models/user.model';
 
@@ -19,7 +18,7 @@ export class AuthService {
 
 
   createNewUser(user: User) {
-
+/*
     return new Promise(
       (resolve, reject) => {
         firebase.auth().createUserWithEmailAndPassword( user.email , user.mdp).then(
@@ -31,10 +30,11 @@ export class AuthService {
           }
         );
       }
-    );
+    );*/
   }
 
   signInUser(email: string, password: string) {
+    /*
     return new Promise(
       (resolve, reject) => {
         firebase.auth().signInWithEmailAndPassword(email, password).then(
@@ -46,10 +46,10 @@ export class AuthService {
           }
         );
       }
-    );
+    );*/
   }
 
   signOutUser() {
-    firebase.auth().signOut();
+   /* firebase.auth().signOut();*/
   }
 }
