@@ -1,9 +1,10 @@
 package fr.kflamand.PostPlatform.web.controller;
 
 import fr.kflamand.PostPlatform.Configurations.ApplicationPropertiesConfiguration;
-import fr.kflamand.PostPlatform.persistance.Dao.PostDao;
 import fr.kflamand.PostPlatform.Exception.PostNotFoundException;
+import fr.kflamand.PostPlatform.persistance.Dao.PostDao;
 import fr.kflamand.PostPlatform.persistance.models.Post;
+import fr.kflamand.PostPlatform.services.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,16 @@ public class PostController {
     PostDao postsDao;
 
     @Autowired
+    PostService postService;
+
+    @Autowired
     ApplicationPropertiesConfiguration appProperties;
 
     // Affiche la liste de tous les posts
     @GetMapping(value = "/Posts")
     public List<Post> listeDesPosts() {
 
-        List<Post> posts = postsDao.findAll();
+        List<Post> posts = postService.getAllPost();
 
         if (posts.isEmpty()) {
 
@@ -44,7 +48,7 @@ public class PostController {
     @GetMapping(value = "/Posts/{id}")
     public Post recupererUnPost(@PathVariable long id) {
 
-        Optional<Post> postOp = postsDao.findById(id);
+        Optional<Post> postOp = postService.getOneById(id);
 
         if (!postOp.isPresent()) {
             throw new PostNotFoundException("Le post correspondant à l'id " + id + " n'existe pas");
@@ -65,8 +69,7 @@ public class PostController {
     @ResponseBody
     public void addPost(@RequestBody Post post) {
 
-        log.info(post.toString());
-        postsDao.save(post);
+        postService.addNewPost(post);
 
     }
 
@@ -74,8 +77,7 @@ public class PostController {
     @ResponseBody
     public void updatePost(@RequestBody Post post) {
 
-        log.info(post.toString());
-        postsDao.save(post);
+        postService.updateOnePost(post);
 
     }
 
@@ -85,8 +87,7 @@ public class PostController {
 
         // TODO Bloqué modif autre que loveIts
 
-        log.info(post.toString());
-        postsDao.save(post);
+    postService.updateLoveItsOfOnePost(post);
 
     }
 
@@ -94,8 +95,7 @@ public class PostController {
     @ResponseBody
     public void deletePost(@PathVariable long id) {
 
-        Post post = postsDao.findPostByIdEquals(id);
-        postsDao.delete(post);
+        postService.deletePostById(id);
 
     }
 
