@@ -19,10 +19,10 @@ public class PostController {
 
     //Logger du Controller
     Logger log = LoggerFactory.getLogger(this.getClass());
-
+/*
     @Autowired
     PostDao postsDao;
-
+*/
     @Autowired
     PostService postService;
 

@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   signInUser(email: string, password: string) {
-    /*
+
     return new Promise(
       (resolve, reject) => {
         firebase.auth().signInWithEmailAndPassword(email, password).then(
@@ -52,7 +52,7 @@ export class AuthService {
           }
         );
       }
-    );*/
+    );
   }
 
   signOutUser() {
