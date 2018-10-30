@@ -14,6 +14,10 @@
         <label for="password">Mot de passe</label>
         <input type="password" id="password" class="form-control" formControlName="password">
       </div>
+      <div class="form-group">
+        <label for="matchingPassword">Confirmation du mot de passe</label>
+        <input type="password" id="matchingPassword" class="form-control" formControlName="matchingPassword">
+      </div>
       <button class="btn btn-primary" type="submit" [disabled]="signUpForm.invalid">Créer mon compte</button>
     </form>
     <p class="text-danger">{{ errorMassage }}</p>

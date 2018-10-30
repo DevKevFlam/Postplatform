@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {User} from '../../models/user.model';
 import {Subscription} from 'rxjs';
-import {UserDto} from "../../models/userDto.model";
+import {UserDto} from '../../models/userDto.model';
 
 @Component({
   selector: 'app-signup',
@@ -13,44 +13,37 @@ import {UserDto} from "../../models/userDto.model";
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit , OnDestroy {
-  signUpForm: FormGroup;
-  errorMassage: string;
 
-  users: User[];
-  userSubscription: Subscription;
+  signUpForm: FormGroup;
+  newUserDto: UserDto;
+  userDtoSubscription: Subscription;
+
+  usersDto: UserDto[];
+
+  errorMassage: string;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
-              private userService: UserService,
               private router: Router) {
 
   }
 
   ngOnInit() {
-    this.initForm();
-    this.userSubscription = this.userService.usersSubject.subscribe(
-      (users: User[]) => {
-        this.users = users;
+
+    this.userDtoSubscription = this.authService.usersDtoSubject.subscribe(
+      (usersDto: UserDto[]) => {
+        this.usersDto = usersDto;
       }
     );
-    /*
-    //TODO IsAuth initialisation
-    firebase.auth().onAuthStateChanged(
-      (user) => {
-        if (user) {
-          this.isAuth = true;
-        } else {
-          this.isAuth = false;
-        }
-      }
-    );*/
-    this.userService.getUsers();
-    this.userService.emitUsers();
+
+    this.initForm();
+
+    this.authService.getUsersDto();
+    this.authService.emitUsersDto();
   }
 
-
   ngOnDestroy() {
-    this.userSubscription.unsubscribe();
+    this.userDtoSubscription.unsubscribe();
   }
 
   initForm() {
@@ -58,16 +51,18 @@ export class SignupComponent implements OnInit , OnDestroy {
       {
         email: ['', [Validators.required, Validators.email]],
         pseudo: ['', [Validators.required]],
-        password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
+        password: ['', /*[Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]*/],
+        matchingPassword: ['', /*[Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]*/]
       });
   }
 
   onSubmit() {
     const email = this.signUpForm.get('email').value;
     const pseudo = this.signUpForm.get('pseudo').value;
+
+    // TODO ajout d'un champ de verif du password: validation Matching
     const password = this.signUpForm.get('password').value;
-    // TODO ajout d'un champ de verif du password
-    const matchingPassword = this.signUpForm.get('password').value;
+    const matchingPassword = this.signUpForm.get('matchingPassword').value;
 
     const user: UserDto = new UserDto();
 
@@ -75,14 +70,14 @@ export class SignupComponent implements OnInit , OnDestroy {
     user.pseudo = pseudo;
     user.password = password;
     user.matchingPassword = matchingPassword;
-    this.authService.createNewUser(user).then(
-      () => {
-        // TODO gestion de l'authentification et MDP
-      },
-      (error) => {
-        this.errorMassage = error;
-      }
-    );
 
+    console.log(user);
+
+    this.authService.signUpUser(user);
+
+    // TODO Si ok
+    this.router.navigate(['/Posts']);
+
+    // TODO Si Ereur
   }
 }

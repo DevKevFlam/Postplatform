@@ -26,16 +26,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.posts = posts;
       }
     );
-    // firebase.auth().onAuthStateChanged(
-    //   (user) => {
-    //     if (user) {
-    //       this.isAuth = true;
-    //     } else {
-    //       this.isAuth = false;
-    //     }
-    //   }
-    // );
-    this.isAuth = true;
+    this.isAuth = false;
     this.postsService.getPosts();
     this.postsService.emitPosts();
   }

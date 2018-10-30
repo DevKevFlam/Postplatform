@@ -10,7 +10,11 @@ import {UserService} from './user.service';
 export class PostService {
 
   private apiUrl: String = 'http://localhost:9001';
-  private userService: UserService;
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  };
 
   posts: Post [] = [];
   postsSubject = new Subject<Post[]>();
@@ -18,13 +22,8 @@ export class PostService {
   postEnCour: Post = null;
   postSubject = new Subject<Post>();
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    })
-  };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
   }
 
   emitPosts() {
@@ -41,7 +40,7 @@ export class PostService {
   private savePosts() {
     const objectObservable = this.http.post(this.apiUrl + '/Posts', this.posts[this.posts.length - 1], this.httpOptions).pipe();
     return objectObservable;
-}
+  }
 
   // OK
   private updatePosts(id: number) {

@@ -3,8 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Post} from '../models/post.model';
 import {PostService} from '../services/post.service';
 import {Router} from '@angular/router';
-import {User} from "../models/user.model";
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-new-post',
