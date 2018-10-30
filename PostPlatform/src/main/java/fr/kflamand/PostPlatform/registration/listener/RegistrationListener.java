@@ -21,10 +21,11 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     @Autowired
     private UserService service;
     //private IUserService service;
-
+/*
+//Pour Mailling
     @Autowired
     private MessageSource messages;
-
+*/
     @Autowired
     private JavaMailSender mailSender;
 
@@ -43,16 +44,22 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final String token = UUID.randomUUID().toString();
         service.createVerificationTokenForUser(user, token);
 
+        //TODO Mail apres registration
+/*
         final SimpleMailMessage email = constructEmailMessage(event, user, token);
         mailSender.send(email);
+ */
     }
 
     //
-
+/*
+//Création du message pour mail
     private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) {
         final String recipientAddress = user.getEmail();
         final String subject = "Registration Confirmation";
         final String confirmationUrl = event.getAppUrl() + "/registrationConfirm.html?token=" + token;
+       //TODO créer .poperties  pour  MessageSource
+        // final String message = messages.getMessage("message.regSucc", null, event.getLocale());
         final String message = messages.getMessage("message.regSucc", null, event.getLocale());
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
@@ -61,5 +68,5 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         email.setFrom(env.getProperty("support.email"));
         return email;
     }
-
+*/
 }

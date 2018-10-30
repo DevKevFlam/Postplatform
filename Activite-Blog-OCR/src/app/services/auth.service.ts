@@ -37,9 +37,9 @@ export class AuthService {
   // TODO liaison avec Spring Security et Service Auth from PostPlatform BAckend
 
   /////////////////////////////////// HTTP Request for Registration : GET
-  getUsersDto() {
+  getUsersDto() {/*
     this.users = [];
-    this.http.get<UserDto[]>(this.apiUrl + '/users').toPromise().then(
+    this.http.get<UserDto[]>(this.apiUrl + '/user').toPromise().then(
       data => {
         data.forEach(value => {
 
@@ -58,10 +58,12 @@ export class AuthService {
       }
     )
     // Pour debug
-    // console.log(this.posts);
+    // console.log(this.posts);*/
     this.emitUsersDto();
   }
 
+  // TODO activeUserManagement
+  /*
   getSingleUserDto(user: UserDto): UserDto {
     this.userEnCour = user;
     this.http.get<UserDto>(this.apiUrl + '/Posts/' + user).toPromise().then(
@@ -76,11 +78,12 @@ export class AuthService {
     this.emitUsersDtoEnCour();
     return this.userEnCour;
   }
+*/
 
   //////////////////////////////////// HTTP Request for Registration
 
   private registerUserAccount(user: UserDto) {
-    const objectObservable = this.http.post(this.apiUrl + '/user/registration', user, this.httpOptions).pipe();
+    const objectObservable = this.http.post(this.apiUrl + '/user/registration', user, this.httpOptions).toPromise();
     console.log(objectObservable);
     return objectObservable;
   }
@@ -93,19 +96,14 @@ export class AuthService {
   ////////////////////////////////////
 
   signUpUser(user: UserDto) {
-    this.users.push(user);
-    const promiseOk = this.saveUsersDto();
-/*
+
+    // this.users.push(user);
+    // const promiseOk = this.saveUsersDto();
+
+    const promiseOk = this.registerUserAccount(user);
+
     // TODO gestion de l'authentification et MDP
-      },
-      (error) => {
-        if (user.matchingPassword !== user.password) {
-          error = error + ' !!!Passwords don\'t match!!!';
-        }
-        console.log('registration fail!!! onSub signUP')
-        this.errorMassage = error;
-      }
-    );*/
+
     // TODO: Validation ou erreurs + routage vers "/Posts"
 
     this.emitUsersDto();
@@ -137,6 +135,6 @@ export class AuthService {
   }
 
   signOutUser() {
-    /* firebase.auth().signOut();*/
+
   }
 }

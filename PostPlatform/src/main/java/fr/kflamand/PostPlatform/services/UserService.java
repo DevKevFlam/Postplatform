@@ -61,9 +61,10 @@ public class UserService implements IUserService {
             throw new UserAlreadyExistException("There is an account with that email adress: " + accountDto.getEmail());
         }
         final User user = new User();
-
-        user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
+        user.setEnabled(true);
+        user.setUsing2FA(false);
+        user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setPseudo(accountDto.getPseudo());
 
         //Double Auth

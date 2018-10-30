@@ -84,7 +84,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/Posts/loveIts").permitAll()
                 .antMatchers(HttpMethod.POST, "/Posts").authenticated()  // TODO Limité acces au poster corespondant
                 .antMatchers(HttpMethod.PATCH, "/Posts").authenticated() // TODO Limité acces au poster corespondant
-                .antMatchers(HttpMethod.DELETE, "/Posts/{id}").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/Posts/{id}").authenticated();
 
 
         // @formatter:off
@@ -93,7 +93,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()*/
-
+/*
                 .antMatchers("/login*", "/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
                         "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
                         "/badUser*", "/user/resendRegistrationToken*", "/forgetPassword*", "/user/resetPassword*",
@@ -114,7 +114,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(myAuthenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
         /*.authenticationDetailsSource(authenticationDetailsSource)*/
-            .permitAll()
+/*            .permitAll()
                 .and()
             .sessionManagement()
                 .invalidSessionUrl("/invalidSession.html")

@@ -1,5 +1,6 @@
 package fr.kflamand.PostPlatform.web.controller;
 
+import fr.kflamand.PostPlatform.Exception.EmailExistsException;
 import fr.kflamand.PostPlatform.Exception.InvalidOldPasswordException;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.persistance.models.VerificationToken;
@@ -23,7 +24,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -69,12 +74,39 @@ public class RegistrationController {
     @PostMapping(value = "/user/registration")
     @ResponseBody
     public GenericResponse registerUserAccount(@RequestBody @Valid final UserDto accountDto, final HttpServletRequest request) {
+        // Pour Debug
         LOGGER.debug("Registering user account with information: {}", accountDto);
         System.out.println("///////////////////////////////////////////////////////////////////////////////////////////////" + accountDto.toString());
+
         final User registered = userService.registerNewUserAccount(accountDto);
-//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+
         return new GenericResponse("success");
     }
+
+/*
+    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+    public ModelAndView registerUserAccount (@ModelAttribute("user") @Valid UserDto accountDto, BindingResult result, WebRequest request, Errors errors) {
+
+        if (!result.hasErrors()) {
+            registered = createUserAccount(accountDto, result);
+        }
+        if (registered == null) {
+            result.rejectValue("email", "message.regError");
+        }
+        // rest of the implementation
+    }
+    private User createUserAccount(UserDto accountDto, BindingResult result) {
+        User registered = null;
+        try {
+            registered = service.registerNewUserAccount(accountDto);
+        } catch (EmailExistsException e) {
+            return null;
+        }
+        return registered;
+    }
+*/
 
 
     //TODO Check for redirect

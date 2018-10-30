@@ -6,6 +6,7 @@ import {UserService} from '../../services/user.service';
 import {User} from '../../models/user.model';
 import {Subscription} from 'rxjs';
 import {UserDto} from '../../models/userDto.model';
+import {resolve} from "q";
 
 @Component({
   selector: 'app-signup',
@@ -73,11 +74,21 @@ export class SignupComponent implements OnInit , OnDestroy {
 
     console.log(user);
 
-    this.authService.signUpUser(user);
+    this.authService.signUpUser(user).then(
+      resolve => {
+        // TODO Si ok
+        console.log('Registration OK');
+        this.router.navigate(['/Posts']);
+      },
+      error => {
+        // TODO Si Ereur
+        this.errorMassage = error;
+        console.log('Registration Fail');
+      },
+    );
 
-    // TODO Si ok
-    this.router.navigate(['/Posts']);
 
-    // TODO Si Ereur
+
+
   }
 }
