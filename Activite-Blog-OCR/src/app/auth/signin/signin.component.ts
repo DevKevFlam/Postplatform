@@ -40,9 +40,8 @@ export class SigninComponent implements OnInit {
     this.signInForm = this.formBuilder.group(
       {
         email: ['', [Validators.required, Validators.email]],
-        pseudo: ['', [Validators.required]],
-        password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
-        matchingPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
+        // pseudo: ['', [Validators.required]],
+        password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
       }
     );
   }
@@ -50,14 +49,15 @@ export class SigninComponent implements OnInit {
   onSubmit() {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
-    const matchingPassword = this.signInForm.get('matchingPassword').value;
-    const pseudo = this.signInForm.get('pseudo').value;
-    this.authService.signInUser(email, password, matchingPassword, pseudo).then(
+
+    this.authService.signInUser(email, password).then(
       () => {
-        this.router.navigate(['/books']);
+        console.log('retour auth to comp ok');
+        // this.router.navigate(['/books']);
       },
       (error) => {
         this.errorMassage = error;
+        console.log('retour auth to comp fail  // ' + error);
       }
     );
   }

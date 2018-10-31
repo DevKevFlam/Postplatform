@@ -3,7 +3,6 @@ import {UserService} from '../services/user.service';
 import {UserDto} from '../models/userDto.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Subject} from 'rxjs';
-import {Post} from "../models/post.model";
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +13,19 @@ export class AuthService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
+
     })
   };
 
   users: UserDto [] = [];
   usersDtoSubject = new Subject<UserDto[]>();
 
-  userEnCour: UserDto  = null;
+  userEnCour: UserDto = null;
   userDtoUsingSubject = new Subject<UserDto>();
 
 
-  constructor(private serviceUser: UserService, private http: HttpClient) {}
+  constructor(private serviceUser: UserService, private http: HttpClient) {
+  }
 
   emitUsersDto() {
     this.usersDtoSubject.next(this.users);
@@ -88,17 +89,17 @@ export class AuthService {
     return objectObservable;
   }
 
-  private saveUsersDto() {
-    const objectObservable = this.http.post(this.apiUrl + '/user/registration', this.users[this.users.length - 1], this.httpOptions).toPromise();
-    return objectObservable;
-  }
+  /*
+    private signInUserAccount(user: UserDto) {
+      const objectObservable = this.http.post(this.apiUrl + '/user/signIn', user, this.httpOptions).toPromise();
+      console.log(objectObservable);
+      return objectObservable;
+    }
+  */
 
   ////////////////////////////////////
 
   signUpUser(user: UserDto) {
-
-    // this.users.push(user);
-    // const promiseOk = this.saveUsersDto();
 
     const promiseOk = this.registerUserAccount(user);
 
@@ -111,29 +112,25 @@ export class AuthService {
   }
 
 
-  // TODO SignIn SignOut
-  signInUser(email: string, password: string, matchingPassword: string, pseudo: string) {
+  signInUser(email: string, password: string) {
     const userDto = new UserDto();
 
     userDto.email = email;
-    userDto.pseudo = pseudo;
     userDto.password = password;
-    userDto.matchingPassword = matchingPassword;
 
-    return new Promise(
-      (resolve, reject) => {
-        this.http.post(this.apiUrl + '/user/registration', userDto, this.httpOptions).toPromise().then(
-          () => {
-            resolve();
-          },
-          (error) => {
-            reject(error);
-          }
-        );
-      }
-    );
+    this.httpOptions.headers.append('email', userDto.email)
+    this.httpOptions.headers.append('password', userDto.password)
+
+    // const promiseOk = this.signInUserAccount(userDto);
+     const retour = this.http.get(this.apiUrl + '/user/signIn', this.httpOptions).toPromise();
+
+    this.httpOptions.headers.delete('email');
+    this.httpOptions.headers.delete('password');
+
+    return retour;
   }
 
+  // TODO SignOut supp des active user
   signOutUser() {
 
   }

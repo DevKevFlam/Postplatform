@@ -79,7 +79,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Set default configurations from Spring Security
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/Posts","/Posts/{id}","/Users","/Users/{id}").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/registration").permitAll()
+                .antMatchers(HttpMethod.POST, "/user/registration", "/user/signIn").permitAll()
                 //TODO bloqué a un seul acces
                 .antMatchers( "/Posts/loveIts").permitAll()
                 .antMatchers(HttpMethod.POST, "/Posts").authenticated()  // TODO Limité acces au poster corespondant

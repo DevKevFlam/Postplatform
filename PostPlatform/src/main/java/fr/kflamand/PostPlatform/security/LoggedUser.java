@@ -27,6 +27,7 @@ public class LoggedUser implements HttpSessionBindingListener {
         if (!users.contains(user.getUsername())) {
             users.add(user.getUsername());
         }
+        System.out.println("////////////////    LOGGED USERS  =====>" + users);
     }
 
     @Override

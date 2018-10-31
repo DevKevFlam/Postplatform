@@ -62,6 +62,7 @@ public class UserService implements IUserService {
         }
         final User user = new User();
         user.setEmail(accountDto.getEmail());
+        // TODO Enable true if Mail est validé
         user.setEnabled(true);
         user.setUsing2FA(false);
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));

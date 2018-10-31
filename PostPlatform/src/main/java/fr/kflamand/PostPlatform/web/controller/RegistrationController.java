@@ -78,36 +78,11 @@ public class RegistrationController {
         LOGGER.debug("Registering user account with information: {}", accountDto);
         System.out.println("///////////////////////////////////////////////////////////////////////////////////////////////" + accountDto.toString());
 
-        final User registered = userService.registerNewUserAccount(accountDto);
-
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
-
+    // TODO Gestion de la non inscription (try catch)
+    final User registered = userService.registerNewUserAccount(accountDto);
+    eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
         return new GenericResponse("success");
     }
-
-/*
-    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-    public ModelAndView registerUserAccount (@ModelAttribute("user") @Valid UserDto accountDto, BindingResult result, WebRequest request, Errors errors) {
-
-        if (!result.hasErrors()) {
-            registered = createUserAccount(accountDto, result);
-        }
-        if (registered == null) {
-            result.rejectValue("email", "message.regError");
-        }
-        // rest of the implementation
-    }
-    private User createUserAccount(UserDto accountDto, BindingResult result) {
-        User registered = null;
-        try {
-            registered = service.registerNewUserAccount(accountDto);
-        } catch (EmailExistsException e) {
-            return null;
-        }
-        return registered;
-    }
-*/
-
 
     //TODO Check for redirect
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
@@ -132,7 +107,6 @@ public class RegistrationController {
     }
 
     // user activation - verification
-
     @RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.GET)
     @ResponseBody
     public GenericResponse resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {

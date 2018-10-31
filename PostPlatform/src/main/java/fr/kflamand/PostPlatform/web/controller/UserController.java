@@ -1,20 +1,24 @@
 package fr.kflamand.PostPlatform.web.controller;
 
-import fr.kflamand.PostPlatform.Exception.EmailExistsException;
 import fr.kflamand.PostPlatform.Exception.EmailNotFoundException;
 import fr.kflamand.PostPlatform.Exception.UserNotFoundException;
 import fr.kflamand.PostPlatform.persistance.Dao.RoleDao;
 import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.security.ActiveUserStore;
+import fr.kflamand.PostPlatform.security.LoggedUser;
 import fr.kflamand.PostPlatform.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -26,6 +30,9 @@ public class UserController {
     // Private fields
 
     Logger log = LoggerFactory.getLogger(this.getClass());
+
+    //@Autowired
+    //private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     ActiveUserStore activeUserStore;
@@ -40,18 +47,65 @@ public class UserController {
     private UserDao userDao;
     private RoleDao roleDao;
 
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/loggedUsers", method = RequestMethod.GET)
-    public String getLoggedUsers(final Locale locale, final Model model) {
+    public List<String> getLoggedUsers(final Locale locale, final Model model) {
         model.addAttribute("users", activeUserStore.getUsers());
-        return "users";
+        //return "users";
+        return activeUserStore.getUsers();
     }
-
+/*
     @RequestMapping(value = "/loggedUsersFromSessionRegistry", method = RequestMethod.GET)
     public String getLoggedUsersFromSessionRegistry(final Locale locale, final Model model) {
         model.addAttribute("users", userService.getUsersFromSessionRegistry());
         return "users";
+    }*/
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @GetMapping(value = "/user/signIn")
+    @ResponseBody
+    public String SignIn(@RequestHeader final HttpServletRequest request, final HttpHeaders header) {
+
+        HttpSession session = request.getSession();
+
+        String emailS = session.getAttribute("email").toString();
+        String passwordS = session.getAttribute("password").toString();
+        log.debug("//////////// Header test SESSION email--" + emailS + "--  MDP --" + passwordS + "--");
+        System.out.println("//////////// Header test SESSION email--" + emailS + "--  MDP --" + passwordS + "--");
+
+        String email = request.getHeader("email");
+        String password = request.getHeader("password");
+        log.debug("//////////// Header test ReqHead email--" + email + "--  MDP --" + password + "--");
+        System.out.println("//////////// Header test ReqHead email--" + email + "--  MDP --" + password + "--");
+/*
+        String emailH = header.getValuesAsList().("email");
+        String passwordH = request.getHeader("password");
+        log.debug("//////////// Header test HTTPHead email--" + emailH + "--  MDP --" + passwordH + "--");
+        */
+        /*
+        User user = userService.findUserByEmail(email);
+
+        if (user.getEmail() != email) {
+            //TODO throw exception
+
+        }
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            //TODO throw new SignInException();
+            System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
+        } else {
+            System.out.println("////////////////////////////  AUTH OK!!!  ////////////////////////////");
+            LoggedUser userLog = new LoggedUser(user.getEmail(), activeUserStore);
+            userLog.valueBound(new HttpSessionBindingEvent(session, user.getEmail()));
+            // eventPublisher.publishEvent();
+            // TODO Renvois du token de co
+            // HttpServletResponse
+        }
+        return activeUserStore.toString();*/
+        return "";
     }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Method Perso
@@ -103,7 +157,7 @@ public class UserController {
             throw new UserNotFoundException("Le user correspondant à l'email " + email + " n'existe pas");
         }
 
-        if (userOp.getEmail() == email && (userOp.getPseudo()=="" || userOp.getPseudo() == null)) {
+        if (userOp.getEmail() == email && (userOp.getPseudo() == "" || userOp.getPseudo() == null)) {
             throw new UserNotFoundException("Le user correspondant à l'email" + email + " n'existe pas");
         }
 

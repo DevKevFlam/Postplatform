@@ -72,8 +72,6 @@ export class SignupComponent implements OnInit , OnDestroy {
     user.password = password;
     user.matchingPassword = matchingPassword;
 
-    console.log(user);
-
     this.authService.signUpUser(user).then(
       resolve => {
         // TODO Si ok
