@@ -117,15 +117,13 @@ export class AuthService {
 
     userDto.email = email;
     userDto.password = password;
+    userDto.matchingPassword = '';
+    userDto.pseudo = '';
 
-    this.httpOptions.headers.append('email', userDto.email)
-    this.httpOptions.headers.append('password', userDto.password)
-
+    this.httpOptions.headers.append('user', userDto.toString() )
     // const promiseOk = this.signInUserAccount(userDto);
-     const retour = this.http.get(this.apiUrl + '/user/signIn', this.httpOptions).toPromise();
-
-    this.httpOptions.headers.delete('email');
-    this.httpOptions.headers.delete('password');
+   // const objectObservable = this.http.post(this.apiUrl + '/user/signIn', userDto, this.httpOptions).toPromise();
+    const retour = this.http.get(this.apiUrl + '/user/signIn', this.httpOptions).toPromise();
 
     return retour;
   }

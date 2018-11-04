@@ -52,7 +52,7 @@ export class SigninComponent implements OnInit {
 
     this.authService.signInUser(email, password).then(
       () => {
-        console.log('retour auth to comp ok');
+        console.log('retour auth to comp ok !!!');
         // this.router.navigate(['/books']);
       },
       (error) => {

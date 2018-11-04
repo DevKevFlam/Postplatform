@@ -8,4 +8,7 @@ export class UserDto {
 
   constructor() {}
 
+  toString() {
+   return '\'password\':\'' + this.password + '\',\'matchingPassword\':\'' + this.matchingPassword + '\',\'email\':\'' + this.email + '\',\'pseudo\':\'' + this.pseudo + '\'';
+  }
 }

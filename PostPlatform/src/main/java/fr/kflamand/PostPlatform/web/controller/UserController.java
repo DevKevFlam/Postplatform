@@ -8,6 +8,7 @@ import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.security.ActiveUserStore;
 import fr.kflamand.PostPlatform.security.LoggedUser;
 import fr.kflamand.PostPlatform.services.IUserService;
+import fr.kflamand.PostPlatform.web.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin/*("http://localhost:4200")*/
 @RestController
 public class UserController {
 
@@ -65,9 +66,14 @@ public class UserController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @GetMapping(value = "/user/signIn")
     @ResponseBody
-    public String SignIn(@RequestHeader final HttpServletRequest request, final HttpHeaders header) {
+    public String SignInGET(@RequestHeader("user") UserDto userHeader, final HttpServletRequest request, final HttpHeaders header) {
 
         HttpSession session = request.getSession();
+
+        String emailU = userHeader.getEmail();
+        String passwordU = userHeader.getPassword() ;
+        log.debug("//////////// Header test SESSION email--" + emailU + "--  MDP --" + passwordU + "--");
+        System.out.println("//////////// Header test SESSION email--" + emailU + "--  MDP --" + passwordU + "--");
 
         String emailS = session.getAttribute("email").toString();
         String passwordS = session.getAttribute("password").toString();
