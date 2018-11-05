@@ -7,19 +7,22 @@ import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.security.ActiveUserStore;
 import fr.kflamand.PostPlatform.security.LoggedUser;
-import fr.kflamand.PostPlatform.services.IUserService;
-import fr.kflamand.PostPlatform.web.dto.UserDto;
+import fr.kflamand.PostPlatform.services.UserService;
+import fr.kflamand.PostPlatform.web.dto.LoginForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -32,14 +35,14 @@ public class UserController {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    //@Autowired
-    //private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     ActiveUserStore activeUserStore;
 
     @Autowired
-    IUserService userService;
+    UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -56,60 +59,62 @@ public class UserController {
         //return "users";
         return activeUserStore.getUsers();
     }
-/*
+
     @RequestMapping(value = "/loggedUsersFromSessionRegistry", method = RequestMethod.GET)
     public String getLoggedUsersFromSessionRegistry(final Locale locale, final Model model) {
         model.addAttribute("users", userService.getUsersFromSessionRegistry());
         return "users";
-    }*/
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @GetMapping(value = "/user/signIn")
-    @ResponseBody
-    public String SignInGET(@RequestHeader("user") UserDto userHeader, final HttpServletRequest request, final HttpHeaders header) {
+    // SIGNIN //OK
+    @PostMapping(value = "/user/signIn")
+    public void SignIn(@RequestBody LoginForm loginForm, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        HttpSession session = request.getSession();
-
-        String emailU = userHeader.getEmail();
-        String passwordU = userHeader.getPassword() ;
-        log.debug("//////////// Header test SESSION email--" + emailU + "--  MDP --" + passwordU + "--");
-        System.out.println("//////////// Header test SESSION email--" + emailU + "--  MDP --" + passwordU + "--");
-
-        String emailS = session.getAttribute("email").toString();
-        String passwordS = session.getAttribute("password").toString();
-        log.debug("//////////// Header test SESSION email--" + emailS + "--  MDP --" + passwordS + "--");
-        System.out.println("//////////// Header test SESSION email--" + emailS + "--  MDP --" + passwordS + "--");
-
-        String email = request.getHeader("email");
-        String password = request.getHeader("password");
-        log.debug("//////////// Header test ReqHead email--" + email + "--  MDP --" + password + "--");
-        System.out.println("//////////// Header test ReqHead email--" + email + "--  MDP --" + password + "--");
+        String email = loginForm.getEmail();
+        String password = loginForm.getPassword();
 /*
-        String emailH = header.getValuesAsList().("email");
-        String passwordH = request.getHeader("password");
-        log.debug("//////////// Header test HTTPHead email--" + emailH + "--  MDP --" + passwordH + "--");
-        */
-        /*
-        User user = userService.findUserByEmail(email);
-
-        if (user.getEmail() != email) {
-            //TODO throw exception
-
-        }
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            //TODO throw new SignInException();
-            System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
+        UserDto userDto = new UserDto();
+        userDto.setEmail(email);
+        userDto.setPassword(password);
+*/
+        //Verification de l'existance du compte par le mail
+        if (!userService.emailExist(email)) {
+            throw new EmailNotFoundException("Le compte n'existe pas!");
         } else {
-            System.out.println("////////////////////////////  AUTH OK!!!  ////////////////////////////");
-            LoggedUser userLog = new LoggedUser(user.getEmail(), activeUserStore);
-            userLog.valueBound(new HttpSessionBindingEvent(session, user.getEmail()));
-            // eventPublisher.publishEvent();
-            // TODO Renvois du token de co
-            // HttpServletResponse
+
+            //Reconstruction du User
+            User user = userService.findUserByEmail(email);
+
+            //Verification du password
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                //TODO event bad SignIN
+                // eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent());
+                System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
+
+
+            } else {
+                System.out.println("////////////////////////////  AUTH OK!!!  ////////////////////////////");
+
+                // Get the current session object, create one if necessary
+                HttpSession session = request.getSession(false);
+                if (session == null) {
+                    System.out.println("-- creating new session in the servlet --");
+                    session = request.getSession(true);
+                    System.out.println("-- session created in the servlet --");
+                }
+
+                String activeToken = (String) session.getAttribute("Token");
+                if (activeToken == null || activeToken == "") {
+                    activeToken = user.getSecret();
+                    session.setAttribute("Token", new LoggedUser(user.getSecret(), activeUserStore));
+                }
+                response.setContentType("application/json");
+                session.removeAttribute("name");
+
+                //TODO Good Auth EVENT
+            }
         }
-        return activeUserStore.toString();*/
-        return "";
     }
 
 

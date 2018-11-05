@@ -69,8 +69,8 @@ public class RegistrationController {
         super();
     }
 
-    // Registration
-
+    // Registration SIGNUP
+    //OK
     @PostMapping(value = "/user/registration")
     @ResponseBody
     public GenericResponse registerUserAccount(@RequestBody @Valid final UserDto accountDto, final HttpServletRequest request) {
@@ -83,6 +83,9 @@ public class RegistrationController {
     eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
         return new GenericResponse("success");
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     //TODO Check for redirect
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)

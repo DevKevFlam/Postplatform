@@ -1,11 +1,12 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+// import { AuthInterceptor } from './services/auth.interceptor';
 import {AppComponent} from './app.component';
 import {PostListComponent} from './post-list-component/post-list.component';
 import {HeaderComponent} from './header/header.component';
 import {RouterModule, Routes} from '@angular/router';
-import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {PostService} from './services/post.service';
 import {AuthGuardService} from './services/auth-guard.service';
@@ -47,13 +48,18 @@ const appRoutes: Routes = [
     UserItemComponent,
   ],
   imports: [
-    BrowserModule,
     HttpClientModule,
+    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
   ],
-  providers: [
+  providers: [/*
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi   : true,
+    },*/
     AuthService,
     AuthGuardService,
     PostService,

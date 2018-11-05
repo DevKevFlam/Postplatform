@@ -13,6 +13,8 @@ import {Subscription} from 'rxjs';
 })
 export class SigninComponent implements OnInit {
 
+  model: any = {};
+
   signInForm: FormGroup;
   errorMassage: string;
 
@@ -27,6 +29,7 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
+    sessionStorage.setItem('token', '');
     this.userSubscription = this.userService.usersSubject.subscribe(
       (users: User[]) => {
         this.users = users;
@@ -50,15 +53,17 @@ export class SigninComponent implements OnInit {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
 
-    this.authService.signInUser(email, password).then(
-      () => {
-        console.log('retour auth to comp ok !!!');
-        // this.router.navigate(['/books']);
-      },
-      (error) => {
-        this.errorMassage = error;
-        console.log('retour auth to comp fail  // ' + error);
+    this.authService.signInUser(email, password).subscribe(isValid => {
+      if (isValid) {
+        sessionStorage.setItem(
+          'token',
+          btoa(email + ':' + password)
+        );
+        this.router.navigate(['']);
+      } else {
+        alert( 'Authentication failed.' );
       }
-    );
+    });
+
   }
 }

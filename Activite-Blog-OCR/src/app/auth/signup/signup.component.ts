@@ -2,11 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {UserService} from '../../services/user.service';
-import {User} from '../../models/user.model';
 import {Subscription} from 'rxjs';
 import {UserDto} from '../../models/userDto.model';
-import {resolve} from "q";
 
 @Component({
   selector: 'app-signup',

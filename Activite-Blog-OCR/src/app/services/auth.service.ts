@@ -3,6 +3,7 @@ import {UserService} from '../services/user.service';
 import {UserDto} from '../models/userDto.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Subject} from 'rxjs';
+import {RequestOptions} from "@angular/http";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import {Subject} from 'rxjs';
 export class AuthService {
 
   private apiUrl: String = 'http://localhost:9001';
+
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -24,8 +26,8 @@ export class AuthService {
   userDtoUsingSubject = new Subject<UserDto>();
 
 
-  constructor(private serviceUser: UserService, private http: HttpClient) {
-  }
+  constructor(private serviceUser: UserService,
+              private http: HttpClient) { }
 
   emitUsersDto() {
     this.usersDtoSubject.next(this.users);
@@ -89,13 +91,13 @@ export class AuthService {
     return objectObservable;
   }
 
-  /*
     private signInUserAccount(user: UserDto) {
-      const objectObservable = this.http.post(this.apiUrl + '/user/signIn', user, this.httpOptions).toPromise();
-      console.log(objectObservable);
+      const objectObservable = this.http.post(this.apiUrl + '/user/signIn', {
+        email: user.email,
+        password: user.password
+      })
       return objectObservable;
     }
-  */
 
   ////////////////////////////////////
 
@@ -120,16 +122,20 @@ export class AuthService {
     userDto.matchingPassword = '';
     userDto.pseudo = '';
 
-    this.httpOptions.headers.append('user', userDto.toString() )
-    // const promiseOk = this.signInUserAccount(userDto);
-   // const objectObservable = this.http.post(this.apiUrl + '/user/signIn', userDto, this.httpOptions).toPromise();
-    const retour = this.http.get(this.apiUrl + '/user/signIn', this.httpOptions).toPromise();
-
-    return retour;
+    return this.signInUserAccount(userDto) ;
   }
 
   // TODO SignOut supp des active user
   signOutUser() {
 
   }
+
+  getToken() {
+
+    return 'TOKEN';
+  }
+
+
+
+
 }
