@@ -1,10 +1,14 @@
 package fr.kflamand.PostPlatform.persistance.models;
 
 import org.jboss.aerogear.security.otp.api.Base32;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class User {
@@ -41,7 +45,7 @@ public class User {
     ///////////////////////////////////////////////////////////////////////
     //Constructors
 
-     public User() {
+    public User() {
         super();
         this.secret = Base32.random();
         this.enabled = false;

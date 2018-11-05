@@ -79,11 +79,17 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Set default configurations from Spring Security
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/Posts","/Posts/{id}","/Users","/Users/{id}").permitAll()
+                //AUTHENTIFICATION PATH -  SIGNUP  -  SIGNIN  -  SIGNOUT
                 .antMatchers(HttpMethod.POST, "/user/registration", "/user/signIn").permitAll()
-                //TODO bloqué a un seul acces
+                .antMatchers(HttpMethod.POST, "user/logOut").authenticated()
+
+                //TODO bloqué a un seul acces par ip
+                //Foncttions LoveITS
                 .antMatchers( "/Posts/loveIts").permitAll()
-                .antMatchers(HttpMethod.POST, "/Posts").authenticated()  // TODO Limité acces au poster corespondant
-                .antMatchers(HttpMethod.PATCH, "/Posts").authenticated() // TODO Limité acces au poster corespondant
+
+                //CRUD Posts
+                .antMatchers(HttpMethod.POST, "/Posts").hasAuthority("WRITE")  // TODO Limité acces au poster corespondant
+                .antMatchers(HttpMethod.PATCH, "/Posts").hasAuthority("CHANGE") // TODO Limité acces au poster corespondant
                 .antMatchers(HttpMethod.DELETE, "/Posts/{id}").authenticated();
 
 
@@ -95,7 +101,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()*/
 /*
                 .antMatchers("/login*", "/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
-                        "/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+                         "/registrationConfirm*", "/expiredAccount*", "/registration*",
                         "/badUser*", "/user/resendRegistrationToken*", "/forgetPassword*", "/user/resetPassword*",
                         "/user/changePassword*", "/emailError*", "/resources/**", "/old/user/registration*", "/successRegister*", "/qrcode*")
                 .permitAll()

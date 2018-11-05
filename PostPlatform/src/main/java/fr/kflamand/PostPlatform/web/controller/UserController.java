@@ -1,5 +1,6 @@
 package fr.kflamand.PostPlatform.web.controller;
 
+import fr.kflamand.PostPlatform.Exception.AuthException;
 import fr.kflamand.PostPlatform.Exception.EmailNotFoundException;
 import fr.kflamand.PostPlatform.Exception.UserNotFoundException;
 import fr.kflamand.PostPlatform.persistance.Dao.RoleDao;
@@ -7,13 +8,19 @@ import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
 import fr.kflamand.PostPlatform.persistance.models.User;
 import fr.kflamand.PostPlatform.security.ActiveUserStore;
 import fr.kflamand.PostPlatform.security.LoggedUser;
+import fr.kflamand.PostPlatform.security.MyUserDetailsService;
 import fr.kflamand.PostPlatform.services.UserService;
 import fr.kflamand.PostPlatform.web.dto.LoginForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -42,6 +47,9 @@ public class UserController {
     ActiveUserStore activeUserStore;
 
     @Autowired
+    MyUserDetailsService detailsService;
+
+    @Autowired
     UserService userService;
 
     @Autowired
@@ -50,7 +58,6 @@ public class UserController {
     @Autowired
     private UserDao userDao;
     private RoleDao roleDao;
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/loggedUsers", method = RequestMethod.GET)
@@ -69,15 +76,12 @@ public class UserController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // SIGNIN //OK
     @PostMapping(value = "/user/signIn")
-    public void SignIn(@RequestBody LoginForm loginForm, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication SignIn(@RequestBody LoginForm loginForm, HttpServletRequest request,
+                                 HttpServletResponse response) throws AuthenticationException {
 
         String email = loginForm.getEmail();
         String password = loginForm.getPassword();
-/*
-        UserDto userDto = new UserDto();
-        userDto.setEmail(email);
-        userDto.setPassword(password);
-*/
+
         //Verification de l'existance du compte par le mail
         if (!userService.emailExist(email)) {
             throw new EmailNotFoundException("Le compte n'existe pas!");
@@ -86,10 +90,16 @@ public class UserController {
             //Reconstruction du User
             User user = userService.findUserByEmail(email);
 
+            UserDetails detailsUser = detailsService.loadUserByUsername(user.getEmail());
+
+            //TODO Verif creation Authentification
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getSecret(), detailsUser.getAuthorities() );
+
             //Verification du password
             if (!passwordEncoder.matches(password, user.getPassword())) {
-                //TODO event bad SignIN
-                // eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent());
+
+                //TODO bad Auth SignIN EVENT
+                 eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent(authentication , new AuthException("Wrong passWord!!!")));
                 System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
 
 
@@ -110,10 +120,16 @@ public class UserController {
                     session.setAttribute("Token", new LoggedUser(user.getSecret(), activeUserStore));
                 }
                 response.setContentType("application/json");
-                session.removeAttribute("name");
 
-                //TODO Good Auth EVENT
+                //TODO Good Auth SignIN EVENT
+                eventPublisher.publishEvent(new AuthenticationSuccessEvent(authentication));
+
+                session.removeAttribute("Token");
+
+
+
             }
+            return authentication;
         }
     }
 
@@ -174,31 +190,6 @@ public class UserController {
 
         return userOp;
     }
-/*
-    @PostMapping("/Users")
-    @ResponseBody
-    public void registerNewUserAccount(@RequestBody User userDto) throws EmailExistsException {
-
-        if (emailExist(userDto.getEmail())) {
-            throw new EmailExistsException(
-                    "There is an account with that email adress:" + userDto.getEmail());
-        }
-
-        User user = new User();
-
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        user.setEmail(userDto.getEmail());
-        user.setPseudo(userDto.getPseudo());
-
-        // TODO Re-création du role
-        user.setRoleUser(user.getRoleUser());
-
-        log.info(user.toString());
-        userDao.save(user);
-
-    }
-*/
 
     @PatchMapping("/Users")
     @ResponseBody

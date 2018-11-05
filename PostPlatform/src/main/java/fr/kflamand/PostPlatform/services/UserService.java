@@ -5,21 +5,17 @@ import fr.kflamand.PostPlatform.persistance.Dao.PasswordResetTokenDao;
 import fr.kflamand.PostPlatform.persistance.Dao.RoleDao;
 import fr.kflamand.PostPlatform.persistance.Dao.UserDao;
 import fr.kflamand.PostPlatform.persistance.Dao.VerificationTokenDao;
-import fr.kflamand.PostPlatform.persistance.models.PasswordResetToken;
-import fr.kflamand.PostPlatform.persistance.models.RoleUser;
-import fr.kflamand.PostPlatform.persistance.models.User;
-import fr.kflamand.PostPlatform.persistance.models.VerificationToken;
+import fr.kflamand.PostPlatform.persistance.models.*;
 import fr.kflamand.PostPlatform.web.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserService implements IUserService {

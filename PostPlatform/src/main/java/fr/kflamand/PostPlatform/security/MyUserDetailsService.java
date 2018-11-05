@@ -64,11 +64,11 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private final List<String> getPrivileges(final RoleUser role) {
         final List<String> privileges = new ArrayList<String>();
-        final List<Privilege> collection = new ArrayList<Privilege>();
-        role.getPrivileges();
+        final List<Privilege> collection = role.getPrivileges();
 
         for (final Privilege item : collection) {
             privileges.add(item.getName());
+            System.out.println("////////////////////////"+item.getName()+"//////");
         }
 
         return privileges;
@@ -76,6 +76,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private final List<GrantedAuthority> getGrantedAuthorities(final List<String> privileges) {
         final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        System.out.println("/////////////////////////////" + privileges.toString() + "///////////////////////");
         for (final String privilege : privileges) {
             authorities.add(new SimpleGrantedAuthority(privilege));
         }

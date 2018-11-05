@@ -3,6 +3,7 @@ package fr.kflamand.PostPlatform.persistance.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -20,7 +21,7 @@ public class RoleUser {
 
     @ManyToMany
     @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
+    private List<Privilege> privileges;
 
     public RoleUser(Long id, @NotNull String libelle) {
         this.id = id;
@@ -58,11 +59,11 @@ public class RoleUser {
         this.users = users;
     }
 
-    public Collection<Privilege> getPrivileges() {
+    public List<Privilege> getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(Collection<Privilege> privileges) {
+    public void setPrivileges(List<Privilege> privileges) {
         this.privileges = privileges;
     }
 }

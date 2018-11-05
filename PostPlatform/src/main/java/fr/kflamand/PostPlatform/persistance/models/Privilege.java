@@ -1,6 +1,7 @@
 package fr.kflamand.PostPlatform.persistance.models;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ public class Privilege {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
-    private Collection<RoleUser> roles;
+    private List<RoleUser> roles;
 
     ///////////////////////////////////////////////////////////////////////
     //Constructors
@@ -53,7 +54,7 @@ public class Privilege {
         return roles;
     }
 
-    public void setRoles(final Collection<RoleUser> roles) {
+    public void setRoles(final List<RoleUser> roles) {
         this.roles = roles;
     }
 

@@ -75,7 +75,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    private final RoleUser createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
+    private final RoleUser createRoleIfNotFound(final String name, final List<Privilege> privileges) {
         RoleUser role = roleDao.findByName(name);
         if (role == null) {
             role = new RoleUser(name);
