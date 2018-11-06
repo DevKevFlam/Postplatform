@@ -64,6 +64,5 @@ export class SigninComponent implements OnInit {
         alert( 'Authentication failed.' );
       }
     });
-
   }
 }

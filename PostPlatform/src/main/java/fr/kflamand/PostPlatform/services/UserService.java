@@ -151,7 +151,7 @@ public class UserService implements IUserService {
         return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
-    public boolean emailExist(final String email) {
+    private boolean emailExist(final String email) {
         return userDao.findByEmail(email) != null;
     }
 

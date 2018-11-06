@@ -76,14 +76,14 @@ public class UserController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // SIGNIN //OK
     @PostMapping(value = "/user/signIn")
-    public Authentication SignIn(@RequestBody LoginForm loginForm, HttpServletRequest request,
+    public Boolean SignIn(@RequestBody LoginForm loginForm, HttpServletRequest request,
                                  HttpServletResponse response) throws AuthenticationException {
 
         String email = loginForm.getEmail();
         String password = loginForm.getPassword();
 
         //Verification de l'existance du compte par le mail
-        if (!userService.emailExist(email)) {
+        if (!this.emailExist(email)) {
             throw new EmailNotFoundException("Le compte n'existe pas!");
         } else {
 
@@ -93,7 +93,7 @@ public class UserController {
             UserDetails detailsUser = detailsService.loadUserByUsername(user.getEmail());
 
             //TODO Verif creation Authentification
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getSecret(), detailsUser.getAuthorities() );
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getSecret(), detailsUser.getAuthorities() );
 
             //Verification du password
             if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -101,7 +101,6 @@ public class UserController {
                 //TODO bad Auth SignIN EVENT
                  eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent(authentication , new AuthException("Wrong passWord!!!")));
                 System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
-
 
             } else {
                 System.out.println("////////////////////////////  AUTH OK!!!  ////////////////////////////");
@@ -117,8 +116,9 @@ public class UserController {
                 String activeToken = (String) session.getAttribute("Token");
                 if (activeToken == null || activeToken == "") {
                     activeToken = user.getSecret();
-                    session.setAttribute("Token", new LoggedUser(user.getSecret(), activeUserStore));
+                    session.setAttribute("Token", new LoggedUser(activeToken, activeUserStore));
                 }
+
                 response.setContentType("application/json");
 
                 //TODO Good Auth SignIN EVENT
@@ -129,7 +129,7 @@ public class UserController {
 
 
             }
-            return authentication;
+            return true;
         }
     }
 
@@ -211,14 +211,7 @@ public class UserController {
 
 
     private boolean emailExist(String email) {
-        String existingMail = userDao.findByEmail(email).getEmail();
-        if (email != existingMail) {
-            return false;
-        } else if (email == existingMail) {
-            return true;
-        } else {
-            throw new EmailNotFoundException("mail fail recherche: UserController.emailExist");
-        }
+        return userDao.findByEmail(email) != null;
     }
 }
 

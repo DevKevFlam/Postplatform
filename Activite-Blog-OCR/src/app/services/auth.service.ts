@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {UserService} from '../services/user.service';
 import {UserDto} from '../models/userDto.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {RequestOptions} from "@angular/http";
 
 @Injectable({
@@ -92,7 +92,8 @@ export class AuthService {
   }
 
     private signInUserAccount(user: UserDto) {
-      const objectObservable = this.http.post(this.apiUrl + '/user/signIn', {
+
+      const objectObservable = this.http.post<Observable<boolean>>(this.apiUrl + '/user/signIn', {
         email: user.email,
         password: user.password
       })

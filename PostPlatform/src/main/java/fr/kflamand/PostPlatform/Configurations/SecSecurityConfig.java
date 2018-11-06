@@ -90,7 +90,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 //CRUD Posts
                 .antMatchers(HttpMethod.POST, "/Posts").hasAuthority("WRITE")  // TODO Limité acces au poster corespondant
                 .antMatchers(HttpMethod.PATCH, "/Posts").hasAuthority("CHANGE") // TODO Limité acces au poster corespondant
-                .antMatchers(HttpMethod.DELETE, "/Posts/{id}").authenticated();
+                .antMatchers(HttpMethod.DELETE, "/Posts/{id}").hasAuthority("DELETE");
 
 
         // @formatter:off
