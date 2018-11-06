@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -69,29 +68,72 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**");
     }
-
+/*
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .inMemoryAuthentication()
+                .withUser("user").password("user").roles("USER")
+                .and()
+                .withUser("admin").password("admin").roles("ADMIN");
+    }
+*/
     //TODO check for rooter
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 // Disable CSRF protection
                 .csrf().disable()
+
                 // Set default configurations from Spring Security
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/Posts","/Posts/{id}","/Users","/Users/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/Posts", "/Posts/{id}", "/Users", "/Users/{id}").permitAll()
+
                 //AUTHENTIFICATION PATH -  SIGNUP  -  SIGNIN  -  SIGNOUT
                 .antMatchers(HttpMethod.POST, "/user/registration", "/user/signIn").permitAll()
                 .antMatchers(HttpMethod.POST, "user/logOut").authenticated()
 
+
                 //TODO bloqué a un seul acces par ip
                 //Foncttions LoveITS
-                .antMatchers( "/Posts/loveIts").permitAll()
+                .antMatchers("/Posts/loveIts").permitAll()
 
                 //CRUD Posts
                 .antMatchers(HttpMethod.POST, "/Posts").hasAuthority("WRITE")  // TODO Limité acces au poster corespondant
                 .antMatchers(HttpMethod.PATCH, "/Posts").hasAuthority("CHANGE") // TODO Limité acces au poster corespondant
-                .antMatchers(HttpMethod.DELETE, "/Posts/{id}").hasAuthority("DELETE");
+                .antMatchers(HttpMethod.DELETE, "/Posts/{id}").hasAuthority("DELETE")
+;/*
+                //LogIn SecConf
+                .and()
+                .formLogin()
+                .loginPage("/user/signIn")
+                //.defaultSuccessUrl("/homepage.html")
+                //.failureUrl("/login?error=true")
+                .successHandler(myAuthenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                //.authenticationDetailsSource(authenticationDetailsSource)
+                .permitAll()
 
+                // SessionManager
+                .and()
+                .sessionManagement()
+                //.invalidSessionUrl("/invalidSession.html")
+                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
+                .sessionFixation().none()
+
+                //LogOut SecConf
+                .and()
+                .logout()
+                .logoutUrl("/user/logOut")
+                .logoutSuccessHandler(myLogoutSuccessHandler)
+                .invalidateHttpSession(false)
+                //.logoutSuccessUrl("/logout.html?logSucc=true")
+                .deleteCookies("JSESSIONID")
+                .permitAll();
+*/
+                // TODO Pour RememberMe
+                //.and()
+                //.rememberMe().rememberMeServices(rememberMeServices()).key("theKey");
 
         // @formatter:off
         // CSRF pour auth registaion login etc
@@ -112,6 +154,9 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/updatePassword*", "/user/savePassword*", "/updatePassword*")
                 .hasAuthority("CHANGE_PASSWORD")
                 .anyRequest().hasAuthority("READ")
+
+
+                /////OK
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -121,11 +166,15 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(authenticationFailureHandler)
         /*.authenticationDetailsSource(authenticationDetailsSource)*/
 /*            .permitAll()
+
+                /////OK
                 .and()
             .sessionManagement()
                 .invalidSessionUrl("/invalidSession.html")
                 .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
                 .sessionFixation().none()
+
+                 /////OK
             .and()
             .logout()
                 .logoutSuccessHandler(myLogoutSuccessHandler)

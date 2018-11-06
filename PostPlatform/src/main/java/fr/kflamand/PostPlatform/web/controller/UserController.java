@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,10 @@ public class UserController {
     // Private fields
 
     Logger log = LoggerFactory.getLogger(this.getClass());
-
+/*
+    @Autowired
+    LogoutHandler logoutHandler;
+*/
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -63,7 +67,7 @@ public class UserController {
     @RequestMapping(value = "/loggedUsers", method = RequestMethod.GET)
     public List<String> getLoggedUsers(final Locale locale, final Model model) {
         model.addAttribute("users", activeUserStore.getUsers());
-        //return "users";
+
         return activeUserStore.getUsers();
     }
 
@@ -76,12 +80,14 @@ public class UserController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // SIGNIN //OK
     @PostMapping(value = "/user/signIn")
-    public Boolean SignIn(@RequestBody LoginForm loginForm, HttpServletRequest request,
-                                 HttpServletResponse response) throws AuthenticationException {
+    public Boolean signIn(@RequestBody LoginForm loginForm, HttpServletRequest request,
+                          HttpServletResponse response) throws AuthenticationException {
 
         String email = loginForm.getEmail();
         String password = loginForm.getPassword();
-
+        System.out.println("////////////////////////////  LOGIN FORM  ////////////////////////////");
+        System.out.println("////////////////////////////  EMAIL--"+email+"--////////////////////////////");
+        System.out.println("////////////////////////////  PASSWORD--"+password+"--////////////////////////////");
         //Verification de l'existance du compte par le mail
         if (!this.emailExist(email)) {
             throw new EmailNotFoundException("Le compte n'existe pas!");
@@ -93,13 +99,13 @@ public class UserController {
             UserDetails detailsUser = detailsService.loadUserByUsername(user.getEmail());
 
             //TODO Verif creation Authentification
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getSecret(), detailsUser.getAuthorities() );
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getSecret(), detailsUser.getAuthorities());
 
             //Verification du password
             if (!passwordEncoder.matches(password, user.getPassword())) {
 
                 //TODO bad Auth SignIN EVENT
-                 eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent(authentication , new AuthException("Wrong passWord!!!")));
+                eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent(authentication, new AuthException("Wrong passWord!!!")));
                 System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
                 return false;
 
@@ -134,7 +140,44 @@ public class UserController {
         }
     }
 
+    // SIGNOUT
+    @PostMapping(value = "/user/logOut")
+    public Boolean logOut(HttpServletRequest request, HttpServletResponse response) {
 
+        HttpSession session = request.getSession(false);
+
+        //Debug Session
+        System.out.println("/////////////////////////////////////////SESSION/////////////////////////////////////////////////////");
+        System.out.println(session);
+        System.out.println(session.toString());
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////////");
+
+        if (session == null) {
+            //TODO Throw pas de session
+            return null;
+        } else {
+            //Récupération de la session ( HTTP )
+            String activeToken = (String) session.getAttribute("Token");
+            //Récupération des session Active
+            List<String> loggedUsers = activeUserStore.getUsers();
+            //Verification de la présence du user dans les session active
+            if (!loggedUsers.contains(activeToken)) {
+                //TODO Throw pas co
+                return false;
+            } else {
+                Authentication authentication = (Authentication) session.getAttribute("Token");
+                loggedUsers.remove(loggedUsers.indexOf(activeToken));
+                activeUserStore.setUsers(loggedUsers);
+                // logoutHandler.logout(request, response, authentication);
+                // TODO LogOut Event
+
+                //eventPublisher.publishEvent();
+                return true;
+            }
+        }
+
+
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Method Perso

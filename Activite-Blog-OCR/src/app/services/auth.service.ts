@@ -96,12 +96,17 @@ export class AuthService {
       const objectObservable = this.http.post<Observable<boolean>>(this.apiUrl + '/user/signIn', {
         email: user.email,
         password: user.password
-      })
+      }, this.httpOptions)
       return objectObservable;
     }
 
   ////////////////////////////////////
-
+  // TODO Methode de verif Auth Ok
+/*
+  isAuth() {
+    sessionStorage.
+  }
+*/
   signUpUser(user: UserDto) {
 
     const promiseOk = this.registerUserAccount(user);
