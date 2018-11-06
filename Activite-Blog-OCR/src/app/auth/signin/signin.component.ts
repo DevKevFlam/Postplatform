@@ -59,6 +59,7 @@ export class SigninComponent implements OnInit {
           'token',
           btoa(email + ':' + password)
         );
+        // TODO Création active user Container from header session
         this.router.navigate(['']);
       } else {
         alert( 'Authentication failed.' );

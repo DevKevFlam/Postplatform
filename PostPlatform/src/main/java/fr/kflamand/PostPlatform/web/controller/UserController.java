@@ -101,6 +101,7 @@ public class UserController {
                 //TODO bad Auth SignIN EVENT
                  eventPublisher.publishEvent(new AuthenticationFailureBadCredentialsEvent(authentication , new AuthException("Wrong passWord!!!")));
                 System.out.println("////////////////////////////  AUTH FAIL  ////////////////////////////");
+                return false;
 
             } else {
                 System.out.println("////////////////////////////  AUTH OK!!!  ////////////////////////////");
@@ -127,11 +128,12 @@ public class UserController {
                 session.removeAttribute("Token");
 
 
-
+                return true;
             }
-            return true;
+
         }
     }
+
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
