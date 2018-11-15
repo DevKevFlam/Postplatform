@@ -73,6 +73,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 // Essais LogIn
                 .formLogin()
                     .loginPage("/auth/login")
+                    // TODO block login avec User.verified
                 .and()
 
 

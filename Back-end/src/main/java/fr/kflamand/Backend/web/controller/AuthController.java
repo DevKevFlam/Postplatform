@@ -2,6 +2,7 @@ package fr.kflamand.Backend.web.controller;
 
 import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
 import fr.kflamand.Backend.entities.User;
+import fr.kflamand.Backend.services.MailService;
 import fr.kflamand.Backend.services.UserService;
 import fr.kflamand.Backend.web.exception.CustomErrorType;
 import org.slf4j.Logger;
@@ -29,6 +30,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MailService mailService;
+
     // request method to create a new account by a guest
     @CrossOrigin
     @PostMapping(value = "/register")
@@ -42,7 +46,9 @@ public class AuthController {
 
         logger.info("user register "+ newUser);
         try {
+            mailService.sendSimpleMessage(newUser.getUsername(), "test Subject", "TEST text");
             return new ResponseEntity<User>(userService.register(newUser), HttpStatus.CREATED);
+            // TODO Send Validation mail
         } catch (UserAlreadyExistException e) {
             logger.error("username Already exist " + newUser.getUsername());
             return new ResponseEntity( new CustomErrorType("user with username " + newUser.getUsername() + "already exist "),

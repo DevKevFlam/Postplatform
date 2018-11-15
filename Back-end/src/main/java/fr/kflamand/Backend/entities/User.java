@@ -32,6 +32,10 @@ public class User implements UserDetails {
 
     private String fullName;
 
+    /*
+    // Boolean de validation du compte sert a bloqué le login si false
+    private Boolean Verified;
+    */
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public User() {
