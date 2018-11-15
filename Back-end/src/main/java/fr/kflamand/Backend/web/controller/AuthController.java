@@ -8,17 +8,11 @@ import fr.kflamand.Backend.web.exception.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @RestController
@@ -44,14 +38,16 @@ public class AuthController {
                     HttpStatus.CONFLICT);
         }*/
 
-        logger.info("user register "+ newUser);
+        logger.info("user register " + newUser);
         try {
-            mailService.sendSimpleMessage(newUser.getUsername(), "test Subject", "TEST text");
-            return new ResponseEntity<User>(userService.register(newUser), HttpStatus.CREATED);
-            // TODO Send Validation mail
+            User user = userService.register(newUser);
+
+           mailService.sendSimpleMessage(newUser.getUsername(), mailService.subjectRegistrationMail(user), mailService.messageRegistrationMail(user));
+
+            return new ResponseEntity<User>(user, HttpStatus.CREATED);
         } catch (UserAlreadyExistException e) {
             logger.error("username Already exist " + newUser.getUsername());
-            return new ResponseEntity( new CustomErrorType("user with username " + newUser.getUsername() + "already exist "),
+            return new ResponseEntity(new CustomErrorType("user with username " + newUser.getUsername() + "already exist "),
                     HttpStatus.CONFLICT);
         }
 
@@ -63,7 +59,7 @@ public class AuthController {
     @GetMapping("/login")
     public Principal user(Principal principal) {
 
-        logger.info("user logged "+ principal);
+        logger.info("user logged " + principal);
 
         logger.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 

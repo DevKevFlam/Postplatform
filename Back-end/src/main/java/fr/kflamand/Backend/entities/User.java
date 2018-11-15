@@ -12,30 +12,36 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(name="User")
+@Table(name = "User")
 @Scope("session")
 public class User implements UserDetails {
 
-    public static enum Role{ USER }
+
+    public static enum Role {USER}
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id ;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(unique = true)
-    private String username ;
+    private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password ;
+    private String password;
 
-    private String  role;
+    private String role;
 
     private String fullName;
 
-    /*
+
     // Boolean de validation du compte sert a bloqué le login si false
-    private Boolean Verified;
-    */
+    private Boolean Enabled;
+
+    @Transient
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private RegistrationToken registrationToken;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public User() {
@@ -52,7 +58,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.Enabled;
     }
 
     @JsonIgnore
@@ -89,13 +95,11 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        // TODO Auto-generated method stub
         return password;
     }
 
     @Override
     public String getUsername() {
-        // TODO Auto-generated method stub
         return username;
     }
 
@@ -126,5 +130,21 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public void setVerified(Boolean verified) {
+        Enabled = verified;
+    }
+
+    public RegistrationToken getRegistrationToken() {
+        return registrationToken;
+    }
+
+    public void setRegistrationToken(RegistrationToken registrationToken) {
+        this.registrationToken = registrationToken;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

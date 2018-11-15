@@ -26,7 +26,6 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  // TODO vider SessionStoage pour sing out
   // login out from the app
   onlogOut() {
 

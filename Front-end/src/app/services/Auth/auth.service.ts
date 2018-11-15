@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
-  // LOGIN //TODO ENCODE PSWD
+  // LOGIN
   public logIn(user: User) {
 
     // creating base64 encoded String from user name and password

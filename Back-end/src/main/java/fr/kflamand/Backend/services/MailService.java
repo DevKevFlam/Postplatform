@@ -1,40 +1,28 @@
 package fr.kflamand.Backend.services;
 
+import fr.kflamand.Backend.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.util.Properties;
 
 @Component
 public class MailService {
 
+    private final String API_NAME = "PostPlatform";
+    private final String SEPARATOR = "------------------------------------------------\n";
+
+    //TODO Ajout fin uri controller registration
+    private final String API_ROOT_URI = "http://localhost:8080/ !!!Controller!!!";
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Autowired
     public JavaMailSender emailSender;
 
-
-    // Email Formating
-    @Bean
-    public SimpleMailMessage templateSimpleMessage() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setText(
-                "This is the test email template for your email:\n%s\n ... Ajout d'un url pour validation http ");
-        return message;
-    }
-
-    // Email Sender
-    // @PostConstruct
-    public void sendSimpleMessage( String to, String subject, String text) {
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void sendSimpleMessage(String to, String subject, String text) {
 
         System.out.println("Sending email...");
 
@@ -43,34 +31,36 @@ public class MailService {
         message.setTo(to);
         message.setFrom("kev.flamand.dev.test@gmail.com");
         message.setSubject(subject);
-       // message.setText(text);
+        message.setText(text);
         message.setFrom("PostPlatform");
 
         try {
             emailSender.send(message);
             System.out.println("Email Sent!");
-        } catch ( MailException e) {
+        } catch (MailException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void sendMessageWithAttachment(String to, String subject, String text, String pathToAttachment) {
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public String messageRegistrationMail(User user) {
 
-/*
-        MimeMessage message = emailSender.createMimeMessage();
+        String UriValidMail = API_ROOT_URI;
 
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        String message = "Hi " + user.getFullName() + ",\n \n This email has been sent from: " + this.API_NAME + "\n \n You have received this email because this email address" +
+                "was used during registration for our API. If you did not register at our forums, please disregard this email. You do not need to unsubscribe or take " +
+                "any further action. \n \n" + this.SEPARATOR + " Activation Instructions \n" + this.SEPARATOR + "\n Thank you for registering. We require that you \"validate\"" +
+                " your registration to ensure that the email address you entered was correct. This protects against unwanted spam and malicious abuse. To activate your account, " +
+                "simply click on the following link: \n \n" + UriValidMail + "\n \n (Some email client users may need to copy and paste the link into your web browser).";
 
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(text);
 
-        FileSystemResource file
-                = new FileSystemResource(new File(pathToAttachment));
-        helper.addAttachment("Invoice", file);
-
-        emailSender.send(message);
-*/
+        return message;
     }
 
+    public String subjectRegistrationMail(User user) {
+
+        String subject = "Wellcome to PostPlatform, " + user.getFullName() + ".";
+
+        return subject;
+    }
 }
