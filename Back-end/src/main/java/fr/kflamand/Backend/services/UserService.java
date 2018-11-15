@@ -45,7 +45,6 @@ public class UserService {
 
         // TODO Re-création du role + Authorities
         //user.setRoleUser(roleDao.findByName("USER"));
-        //User forReturn = userRepository.saveAndFlush(userToSave);
 
         return registrationTokenDao.saveAndFlush(userToSave.getRegistrationToken()).getUser();
     }

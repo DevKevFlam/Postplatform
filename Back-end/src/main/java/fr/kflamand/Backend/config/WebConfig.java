@@ -72,9 +72,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .fullyAuthenticated()
                 .and()
 
-                .antMatcher("/auth/Enables/*")
-                .anonymous()
-                .and()
                 ////////////////////////////////////////////////////////////////////////
                 .formLogin()
                     .loginPage("/auth/login")
@@ -96,6 +93,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 // configuring the session on the server
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
                 // disabling the CSRF - Cross Site Request Forgery
+                //Registration TOKEN
+                /*
+                //TODO Autre moyen de faire passer le token pour evité la casse de login
+                .antMatcher("/auth/Enables/*")
+                .anonymous()
+                .and()
+                */
                 .csrf().disable();
     }
 

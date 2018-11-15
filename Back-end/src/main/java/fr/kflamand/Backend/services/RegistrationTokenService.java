@@ -48,7 +48,7 @@ public class RegistrationTokenService {
             } else {
                 userAMod.setEnabled(true);
                 User userSave = userRepository.save(userAMod);
-                registrationTokenDao.delete(userRT.getId());
+               // registrationTokenDao.delete(userRT.getId());
 
                 return userSave;
             }
