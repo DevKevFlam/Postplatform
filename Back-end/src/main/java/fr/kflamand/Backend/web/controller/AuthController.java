@@ -1,8 +1,10 @@
 package fr.kflamand.Backend.web.controller;
 
 import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
+import fr.kflamand.Backend.Exceptions.UserTokenNotFound;
 import fr.kflamand.Backend.entities.User;
 import fr.kflamand.Backend.services.MailService;
+import fr.kflamand.Backend.services.RegistrationTokenService;
 import fr.kflamand.Backend.services.UserService;
 import fr.kflamand.Backend.web.exception.CustomErrorType;
 import org.slf4j.Logger;
@@ -26,6 +28,9 @@ public class AuthController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private RegistrationTokenService registrationTokenService;
 
     // request method to create a new account by a guest
     @CrossOrigin
@@ -66,5 +71,21 @@ public class AuthController {
         return principal;
     }
 
+    @CrossOrigin
+    @GetMapping("/Enabled/{Token}")
+    public ResponseEntity<?> enableUser( @PathVariable("Token") String token) {
+
+        try {
+
+            User user = registrationTokenService.enableUser(token);
+
+            return new ResponseEntity<User>( user , HttpStatus.ACCEPTED);
+        } catch (UserTokenNotFound e) {
+            logger.error("User TOken not Found //////////////  " + e.getMessage());
+            return new ResponseEntity(new CustomErrorType("User TOken not Found"),
+                    HttpStatus.NOT_FOUND);
+        }
+
+    }
 
 }

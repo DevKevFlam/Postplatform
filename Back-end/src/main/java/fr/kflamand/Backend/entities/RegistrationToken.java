@@ -16,7 +16,7 @@ public class RegistrationToken implements Serializable {
 
     private Calendar expire;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id")
     private User user;
 

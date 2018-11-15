@@ -15,7 +15,7 @@ import java.util.Locale;
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private RegistrationTokenRepository registrationTokenDao;
@@ -36,7 +36,7 @@ public class UserService {
             userToSave.setPassword(passwordEncoder.encode(user.getPassword()));
             userToSave.setFullName(user.getFullName());
             userToSave.setRole("ROLE_USER");
-            userToSave.setVerified(false);
+            userToSave.setEnabled(false);
             userToSave.setUsername(user.getUsername());
 
             userToSave.setRegistrationToken(registrationTokenService.createNewRegistrationToken(userToSave, locale));

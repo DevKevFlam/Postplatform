@@ -132,7 +132,7 @@ public class User implements UserDetails {
         return id;
     }
 
-    public void setVerified(Boolean verified) {
+    public void setEnabled(Boolean verified) {
         Enabled = verified;
     }
 
