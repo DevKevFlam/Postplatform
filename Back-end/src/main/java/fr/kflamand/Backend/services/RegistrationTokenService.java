@@ -15,6 +15,8 @@ public class RegistrationTokenService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private RegistrationTokenRepository registrationTokenDao;
@@ -32,7 +34,7 @@ public class RegistrationTokenService {
         return newRegistrationToken;
     }
 
-    //TODO a Débug
+
     public User enableUser(String token) {
 
         RegistrationToken userRT = registrationTokenDao.findByToken(token);
@@ -48,11 +50,39 @@ public class RegistrationTokenService {
             } else {
                 userAMod.setEnabled(true);
                 User userSave = userRepository.save(userAMod);
-               // registrationTokenDao.delete(userRT.getId());
+                registrationTokenDao.delete(userRT.getId());
 
                 return userSave;
             }
         }
 
+    }
+
+    public User resetPassword(String token, User user) {
+
+        RegistrationToken userRT = registrationTokenDao.findByToken(token);
+
+        if (userRT == null) {
+            throw new UserTokenNotFound("Token Introuvable");
+        } else {
+            User userAMod = userRT.getUser();
+
+            if (userAMod == null) {
+                throw new UserTokenNotFound("Empty User");
+            } else {
+                userAMod.setPassword(user.getPassword());
+
+                User userSave = userService.changePassword(userAMod);
+                registrationTokenDao.delete(userRT.getId());
+                return userSave;
+            }
+        }
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public RegistrationToken saveTokenForResetPassword(RegistrationToken token) {
+        registrationTokenDao.save(token);
+        return token;
     }
 }

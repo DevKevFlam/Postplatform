@@ -13,6 +13,8 @@ import {routing} from "./app.routing";
 import {HttpClientModule} from "@angular/common/http";
 import {AngularWebStorageModule} from "angular-web-storage";
 import {EmailValidationComponent} from './component/Auth/email-validation/email-validation.component';
+import { ResetPasswordComponent } from './component/Auth/reset-password/reset-password.component';
+import { AskForResetPasswordComponent } from './component/Auth/ask-for-reset-password/ask-for-reset-password.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import {EmailValidationComponent} from './component/Auth/email-validation/email-
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    EmailValidationComponent
+    EmailValidationComponent,
+    ResetPasswordComponent,
+    AskForResetPasswordComponent
   ],
 
   imports: [

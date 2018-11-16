@@ -32,7 +32,6 @@ public class MailService {
         message.setFrom("kev.flamand.dev.test@gmail.com");
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom("PostPlatform");
 
         try {
             emailSender.send(message);
@@ -57,6 +56,29 @@ public class MailService {
 
 
         return message;
+    }
+
+    public String messageResetPassword(User user) {
+
+        String UriValidMail = API_ROOT_URI;
+
+        String message = "Hi " + user.getFullName() +
+                ",\n \n This email has been sent from: " + this.API_NAME +
+                "\n \n You have received this email because a password recovery for the user account \"" + user.getFullName() + "\" was instigated by you on PostPlatform. \n \n" +
+                this.SEPARATOR + "IMPORTANT!" + this.SEPARATOR +
+                "If you did not request this password change, please IGNORE and DELETE this email immediately. Only continue if you wish your password to be reset! \n \n" +
+                this.SEPARATOR + "Activation Instructions Below" + this.SEPARATOR +
+                "Simply click on the link below and complete the rest of the form.\n \n" +
+                UriValidMail + user.getRegistrationToken().getToken();
+
+        return message;
+    }
+
+    public String subjectResetPassword(User user) {
+
+        String subject = "Hi " + user.getFullName() + ". Would you reset your password for PostPlatform?";
+
+        return subject;
     }
 
     public String subjectRegistrationMail(User user) {

@@ -65,7 +65,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 // starts authorizing configurations
                 .authorizeRequests()
                 // ignoring the guest's urls "
-                .antMatchers("/auth/register","/auth/Enabled/{Token}","/auth/login","/logout")
+                .antMatchers("/auth/register","/auth/Enabled/{Token}","/auth/login",
+                        "/auth/ResetPassword/{username}","/auth/ResetPassword/{Token}","/auth/getUser","/logout")
                 .permitAll()
                 // authenticate all remaining URLS
                 .anyRequest()

@@ -49,6 +49,13 @@ public class UserService {
         return registrationTokenDao.saveAndFlush(userToSave.getRegistrationToken()).getUser();
     }
 
+    public User changePassword(User user)  {
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            User userSave = userRepository.save(user);
+            return userSave;
+    }
+
     ///////////////////////////////////////////////////////////////////
     // UTIL
     private boolean emailExist(final String email) {
@@ -62,6 +69,10 @@ public class UserService {
 
     public User find(String userName) {
         return userRepository.findOneByUsername(userName);
+    }
+
+    public User findUserWithToken(String token) {
+        return userRepository.findByRegistrationToken(registrationTokenDao.findByToken(token));
     }
 
     public User find(Long id) {
