@@ -14,7 +14,7 @@ public class MailService {
     private final String SEPARATOR = "------------------------------------------------\n";
 
     //TODO Ajout fin uri controller registration
-    private final String API_ROOT_URI = "http://localhost:8080/auth/Enabled/";
+    private final String API_ROOT_URI = "http://localhost:4200/verif/";
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

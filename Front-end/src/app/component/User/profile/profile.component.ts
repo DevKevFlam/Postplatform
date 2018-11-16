@@ -28,7 +28,6 @@ export class ProfileComponent implements OnInit {
 
   // login out from the app
   onlogOut() {
-
     this.authService.logOut()
      .subscribe(
         data => {

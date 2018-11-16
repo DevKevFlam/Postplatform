@@ -12,13 +12,15 @@ import {AuthGuardService} from "./services/Auth/auth-guard.service";
 import {routing} from "./app.routing";
 import {HttpClientModule} from "@angular/common/http";
 import {AngularWebStorageModule} from "angular-web-storage";
+import {EmailValidationComponent} from './component/Auth/email-validation/email-validation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    EmailValidationComponent
   ],
 
   imports: [

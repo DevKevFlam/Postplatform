@@ -15,4 +15,10 @@ export class RegistationService {
   createAccount(user: User) {
     return this.http.post(AppComponent.API_URL + '/auth/register', user);
    }
+
+   verifyMail(token: string){
+
+    return this.http.get(AppComponent.API_URL + '/auth/Enabled/' + token);
+
+   }
 }

@@ -27,6 +27,7 @@ export class RegisterComponent implements OnInit {
       }, err => {
         console.log(err);
         this.errorMessage = 'username already exist';
+        // TODO Erreur Registration
       }
     );
   }
