@@ -10,9 +10,6 @@ import org.springframework.core.env.Environment;
 
 public class MailServerConfig {
 
-    @Autowired
-    private Environment env;
-
     @Bean
     public RegistrationTokenService getRegistrationTokenService() {
         return new RegistrationTokenService();

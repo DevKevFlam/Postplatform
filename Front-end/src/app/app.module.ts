@@ -15,6 +15,7 @@ import {AngularWebStorageModule} from "angular-web-storage";
 import {EmailValidationComponent} from './component/Auth/email-validation/email-validation.component';
 import { ResetPasswordComponent } from './component/Auth/reset-password/reset-password.component';
 import { AskForResetPasswordComponent } from './component/Auth/ask-for-reset-password/ask-for-reset-password.component';
+import { PostItemComponent } from './component/Post/post-item/post-item.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { AskForResetPasswordComponent } from './component/Auth/ask-for-reset-pas
     ProfileComponent,
     EmailValidationComponent,
     ResetPasswordComponent,
-    AskForResetPasswordComponent
+    AskForResetPasswordComponent,
+    PostItemComponent
   ],
 
   imports: [

@@ -4,10 +4,11 @@
 /*
  * General styles
  */
+
 body, html {
   height: 100%;
   background-repeat: no-repeat;
-  background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+  background-image: radial-gradient( rgb(100, 100, 100) , rgb(250, 100, 10));
 }
 
 .card-container.card {
@@ -27,6 +28,7 @@ body, html {
 /*
  * Card component
  */
+
 .card {
   background-color: #F7F7F7;
   /* just in case there no content*/

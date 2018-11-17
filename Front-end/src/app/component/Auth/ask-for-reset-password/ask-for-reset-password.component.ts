@@ -10,15 +10,16 @@ import {User} from '../../../model/model.user';
 })
 export class AskForResetPasswordComponent implements OnInit {
 
-  user: User = new User();
+  user: User ;
   errorMessage: string;
 
   constructor(public Aroute: ActivatedRoute, public registationService: RegistationService, public router: Router) { }
 
   ngOnInit() {
+    this.user = new User();
   }
 
-  onSubmit(){
+  SendMailForReset(){
     this.registationService.askForResetPassword(this.user.username).subscribe(
       (data:any) => {
         // TODO affichage "regarder vos mail"

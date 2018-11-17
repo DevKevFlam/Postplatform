@@ -88,12 +88,6 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role +
-                ",]";
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
@@ -146,5 +140,20 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", Enabled=" + Enabled +
+                ", registrationToken=" + registrationToken +
+                '}';
     }
 }

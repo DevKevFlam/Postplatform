@@ -4,15 +4,28 @@ import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
 import fr.kflamand.Backend.dao.RegistrationTokenRepository;
 import fr.kflamand.Backend.dao.UserRepository;
 import fr.kflamand.Backend.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    public static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDetails user = userRepository.findByUsername(username);
+        return  user;
+    }
 
     @Autowired
     private UserRepository userRepository;
@@ -68,11 +81,15 @@ public class UserService {
     }
 
     public User find(String userName) {
-        return userRepository.findOneByUsername(userName);
+        logger.debug(userName);
+
+        logger.debug(userRepository.findUserByUsername(userName).toString());
+
+        return userRepository.findByUsername(userName);
     }
 
     public User findUserWithToken(String token) {
-        return userRepository.findByRegistrationToken(registrationTokenDao.findByToken(token));
+        return userRepository.findOne(registrationTokenDao.findByToken(token).getId());
     }
 
     public User find(Long id) {

@@ -104,12 +104,19 @@ public class AuthController {
     //Send a mail for reseting the user's password
     @CrossOrigin
     @GetMapping("/ResetPassword/{username}")
-    public ResponseEntity<?> getMailForResetPasswordUser( @PathVariable("username") String username) {
+    public ResponseEntity<?> getMailForResetPasswordUser( @PathVariable("username") String username, Locale locale ) {
 
         try {
-            Locale locale = LocaleContextHolder.getLocale();
+            System.out.println(username);
+            logger.debug(username);
             User user = userService.find(username);
-            user.setRegistrationToken(registrationTokenService.createNewRegistrationToken(user , locale));
+            System.out.println(user.toString());
+            RegistrationToken token = registrationTokenService.createNewRegistrationToken(user , locale);
+
+            System.out.println(token.toString());
+            user.setRegistrationToken(token);
+
+
             registrationTokenService.saveTokenForResetPassword(user.getRegistrationToken());
             mailService.sendSimpleMessage(user.getUsername(),mailService.subjectResetPassword(user),mailService.messageResetPassword(user));
             return new ResponseEntity<User>( user , HttpStatus.ACCEPTED);

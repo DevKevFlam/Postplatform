@@ -59,4 +59,16 @@ public class RegistrationToken implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public String toString() {
+        return "RegistrationToken{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", expire=" + expire +
+                ", user=" + user +
+                '}';
+    }
 }

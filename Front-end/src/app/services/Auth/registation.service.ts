@@ -26,8 +26,8 @@ export class RegistationService {
   }
 
   askForResetPassword(username: string){
-
-    return this.http.get(AppComponent.API_URL + '/ResetPassword/' + username)
+console.log(username)
+    return this.http.get(AppComponent.API_URL + '/auth/ResetPassword/' + username)
 
   }
 

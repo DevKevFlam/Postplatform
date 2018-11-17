@@ -1,6 +1,6 @@
 package fr.kflamand.Backend.config;
 
-import fr.kflamand.Backend.services.AppUserDetailsService;
+import fr.kflamand.Backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    AppUserDetailsService appUserDetailsService;
+    UserService appUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,7 +33,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     // This method is for overriding the default AuthenticationManagerBuilder.
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(appUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(appUserDetailsService ).passwordEncoder(passwordEncoder());
     }
 
     // this configuration allow the client app to access this api
