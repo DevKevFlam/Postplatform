@@ -16,7 +16,7 @@ public class RegistrationToken implements Serializable {
 
     private Calendar expire;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name="id")
     private User user;
 
@@ -62,13 +62,5 @@ public class RegistrationToken implements Serializable {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return "RegistrationToken{" +
-                "id=" + id +
-                ", token='" + token + '\'' +
-                ", expire=" + expire +
-                ", user=" + user +
-                '}';
-    }
+
 }

@@ -8,16 +8,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name = "User")
-@Scope("session")
-public class User implements UserDetails {
+public class User  {
 
 
-    public static enum Role {USER}
+    //public static enum Role {USER}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +33,11 @@ public class User implements UserDetails {
 
     private String fullName;
 
-
     // Boolean de validation du compte sert a bloqué le login si false
     private Boolean Enabled;
 
-    @Transient
     @JsonIgnore
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private RegistrationToken registrationToken;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,50 +52,7 @@ public class User implements UserDetails {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() {
-        return this.Enabled;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role));
-        return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-
+    // ROLE
     public String getRole() {
         return role;
     }
@@ -106,30 +61,43 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    // USERNAME
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    // PASSWORD
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    // FULLNAME
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
-    public Long getId() {
-        return id;
-    }
-
+    // ENABLED
     public void setEnabled(Boolean verified) {
         Enabled = verified;
     }
 
+    public Boolean getEnabled() {
+       return this.Enabled;
+    }
+
+    // TOKEN
     public RegistrationToken getRegistrationToken() {
         return registrationToken;
     }
@@ -138,22 +106,14 @@ public class User implements UserDetails {
         this.registrationToken = registrationToken;
     }
 
+    // ID
     public void setId(Long id) {
         this.id = id;
     }
 
+    public Long getId() {
+        return id;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", Enabled=" + Enabled +
-                ", registrationToken=" + registrationToken +
-                '}';
-    }
 }

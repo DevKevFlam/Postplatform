@@ -13,7 +13,7 @@ export class RegistationService {
   constructor(public http: HttpClient) {
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////
   // SIGNUP // OK
   createAccount(user: User) {
     return this.http.post(AppComponent.API_URL + '/auth/register', user);
@@ -27,7 +27,7 @@ export class RegistationService {
 
   askForResetPassword(username: string){
 console.log(username)
-    return this.http.get(AppComponent.API_URL + '/auth/ResetPassword/' + username)
+    return this.http.get(AppComponent.API_URL + '/auth/ResetPassword/User/' + username)
 
   }
 

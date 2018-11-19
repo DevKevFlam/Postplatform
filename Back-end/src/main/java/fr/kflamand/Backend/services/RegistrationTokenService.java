@@ -34,23 +34,44 @@ public class RegistrationTokenService {
         return newRegistrationToken;
     }
 
+    public RegistrationToken createPasswordResetTokenForUser(String username, Locale locale) {
+
+        //RegistrationToken newRegistrationToken = new RegistrationToken();
+        RegistrationToken newRegistrationToken = registrationTokenDao.findOne(userService.find(username).getId());
+        ////
+        //Expiration date
+        Calendar expireDate = Calendar.getInstance(locale);
+        expireDate.add(Calendar.DATE, 1);
+        newRegistrationToken.setExpire(expireDate);
+        ////
+        //Création du token
+        newRegistrationToken.setToken(RandomString.generateRandomString(32));
+        //Liaison au User
+        //newRegistrationToken.setUser(userService.find(username));
+
+        this.saveTokenForResetPassword(newRegistrationToken);
+        return newRegistrationToken;
+    }
+
 
     public User enableUser(String token) {
 
         RegistrationToken userRT = registrationTokenDao.findByToken(token);
-
         if (userRT == null) {
             throw new UserTokenNotFound("Token Introuvable");
         } else {
-            User userAMod = userRT.getUser();
 
+            User userAMod = userRT.getUser();
 
             if (userAMod == null) {
                 throw new UserTokenNotFound("Empty User");
             } else {
+                // Modif de Enabled
                 userAMod.setEnabled(true);
-                User userSave = userRepository.save(userAMod);
-                registrationTokenDao.delete(userRT.getId());
+                //User userSave = userRepository.save(userAMod);
+                userRT.setToken(null);
+                userRT.setExpire(null);
+                User userSave = registrationTokenDao.save(userRT).getUser();
 
                 return userSave;
             }
@@ -82,7 +103,7 @@ public class RegistrationTokenService {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public RegistrationToken saveTokenForResetPassword(RegistrationToken token) {
-        registrationTokenDao.save(token);
-        return token;
+        return registrationTokenDao.save(token);
+
     }
 }

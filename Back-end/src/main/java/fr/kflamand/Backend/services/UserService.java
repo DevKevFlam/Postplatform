@@ -8,25 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     public static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = userRepository.findByUsername(username);
-        return  user;
-    }
-
+    ///////////////////////////////////////////////////////////////////
     @Autowired
     private UserRepository userRepository;
 
@@ -39,6 +31,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private RegistrationTokenService registrationTokenService;
 
+    ///////////////////////////////////////////////////////////////////
     public User register(User user) throws UserAlreadyExistException {
         User userToSave = null;
         if (emailExist(user.getUsername())) {
@@ -62,11 +55,11 @@ public class UserService implements UserDetailsService {
         return registrationTokenDao.saveAndFlush(userToSave.getRegistrationToken()).getUser();
     }
 
-    public User changePassword(User user)  {
+    public User changePassword(User user) {
 
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            User userSave = userRepository.save(user);
-            return userSave;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User userSave = userRepository.save(user);
+        return userSave;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -81,11 +74,17 @@ public class UserService implements UserDetailsService {
     }
 
     public User find(String userName) {
-        logger.debug(userName);
 
-        logger.debug(userRepository.findUserByUsername(userName).toString());
+        logger.info("On vas chercher: ---" + userName + "---");
 
-        return userRepository.findByUsername(userName);
+        User user = userRepository.findByUsername(userName);
+
+        if (user == null) {
+            logger.error("User = NULL !!!! Pas de Récup en base ");
+        } else {
+            logger.info("On a trouvé:" + user.toString());
+        }
+        return user;
     }
 
     public User findUserWithToken(String token) {

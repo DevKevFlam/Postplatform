@@ -1,6 +1,6 @@
 package fr.kflamand.Backend.config;
 
-import fr.kflamand.Backend.services.UserService;
+import fr.kflamand.Backend.services.PrincipalUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +22,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserService appUserDetailsService;
+    PrincipalUserService appUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PrincipalUserService principalUserService() {
+        return new PrincipalUserService();
     }
 
 
@@ -66,7 +71,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // ignoring the guest's urls "
                 .antMatchers("/auth/register","/auth/Enabled/{Token}","/auth/login",
-                        "/auth/ResetPassword/{username}","/auth/ResetPassword/{Token}","/auth/getUser","/logout")
+                        "/auth/ResetPassword/User/{username}","/auth/ResetPassword/{Token}","/auth/getUser","/logout")
                 .permitAll()
                 // authenticate all remaining URLS
                 .anyRequest()
@@ -94,13 +99,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 // configuring the session on the server
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
                 // disabling the CSRF - Cross Site Request Forgery
-                //Registration TOKEN
-                /*
-                //TODO Autre moyen de faire passer le token pour evité la casse de login
-                .antMatcher("/auth/Enables/*")
-                .anonymous()
-                .and()
-                */
                 .csrf().disable();
     }
 
