@@ -1,5 +1,6 @@
 package fr.kflamand.Backend.services;
 
+import fr.kflamand.Backend.entities.RegistrationToken;
 import fr.kflamand.Backend.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -14,7 +15,9 @@ public class MailService {
     private final String SEPARATOR = "------------------------------------------------\n";
 
     //TODO Ajout fin uri controller registration
-    private final String API_ROOT_URI = "http://localhost:4200/verif/";
+    private final String API_ROOT_URI = "http://localhost:4200";
+    private final String API_ROOT_URI_REGISTRATION = API_ROOT_URI + "/verif/";
+    private final String API_ROOT_URI_RESET_PASSWORD = API_ROOT_URI + "/ResetPassword/";
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +47,7 @@ public class MailService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public String messageRegistrationMail(User user) {
 
-        String UriValidMail = API_ROOT_URI;
+        String UriValidMail = API_ROOT_URI_REGISTRATION;
 
 
 
@@ -58,9 +61,9 @@ public class MailService {
         return message;
     }
 
-    public String messageResetPassword(User user) {
+    public String messageResetPassword(User user, RegistrationToken token) {
 
-        String UriValidMail = API_ROOT_URI;
+        String UriValidMail = API_ROOT_URI_RESET_PASSWORD;
 
         String message = "Hi " + user.getFullName() +
                 ",\n \n This email has been sent from: " + this.API_NAME +
@@ -69,7 +72,7 @@ public class MailService {
                 "If you did not request this password change, please IGNORE and DELETE this email immediately. Only continue if you wish your password to be reset! \n \n" +
                 this.SEPARATOR + "Activation Instructions Below" + this.SEPARATOR +
                 "Simply click on the link below and complete the rest of the form.\n \n" +
-                UriValidMail + user.getRegistrationToken().getToken();
+                UriValidMail + token.getToken();
 
         return message;
     }

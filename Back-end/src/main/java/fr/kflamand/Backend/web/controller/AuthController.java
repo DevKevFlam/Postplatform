@@ -1,8 +1,5 @@
 package fr.kflamand.Backend.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
 import fr.kflamand.Backend.Exceptions.UserTokenNotFound;
 import fr.kflamand.Backend.entities.User;
@@ -86,11 +83,11 @@ public class AuthController {
 
     //Send a mail for reseting the user's password
     @CrossOrigin
-    @GetMapping("/ResetPassword/User/{username}")
-    public ResponseEntity<?> getMailForResetPasswordUser(@PathVariable("username") String username, Locale locale) {
+    @PostMapping("/ResetPassword/User")
+    public ResponseEntity<?> getMailForResetPasswordUser(@RequestBody String username, Locale locale) {
 
         try {
-
+            logger.info("Debut de la création du mail+token pour ---" + username + "----");
             User user = userService.getMailForResetPasswordUser(username, locale);
 
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);

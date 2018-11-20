@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserServiceInterface {
     ///////////////////////////////////////////////////////////////////
     // OVERRIDE METHODS UserServiceInterface
     // CRUD
-        //FIND
+    //FIND
     @Override
     public User findByUsername(String username) {
         logger.info("On vas chercher: ---" + username + "---");
@@ -63,13 +63,14 @@ public class UserServiceImpl implements UserServiceInterface {
     public User findUserWithToken(String token) {
         return userDao.findOne(registrationTokenDao.findByToken(token).getId());
     }
-        // MODIFY
+
+    // MODIFY
     @Override
     public User update(User user) {
         return userDao.save(user);
     }
 
-        //SIGN UP
+    //SIGN UP
     @Override
     public User register(User newUser) throws UserAlreadyExistException {
         User userToSave = null;
@@ -111,34 +112,36 @@ public class UserServiceImpl implements UserServiceInterface {
 
     // Forgotten passWord
     @Override
-    public User getMailForResetPasswordUser(String username , Locale locale) {
+    public User getMailForResetPasswordUser(String username, Locale locale) {
 
-        logger.info("USERNAME -----"+username+"-----");
+        User user = this.findByUsername(username);
+
+        logger.info("--------RESET PASSWORD MAIL----------- USERNAME -----" + username + "--------------------------");
+
+        if (user == null) {
+
+            logger.error("Impossible de find username from user service");
+            throw new UsernameNotFoundException("User : " + username + " introuvable");
+
+        } else {
+            logger.info("FIND!!!   ----" + this.findByUsername(username).toString());
+
+            // Création du token
+            RegistrationToken token = registrationTokenService.createPasswordResetTokenForUser(username, locale);
+            // Envoi du mail
+            mailService.sendSimpleMessage(token.getUser().getUsername(), mailService.subjectResetPassword(token.getUser()), mailService.messageResetPassword(user, token));
+        }
         logger.info("----------------------------------------------------------------------------------------------");
-        if (this.loadUserByUsername(username) != null) {logger.info(this.loadUserByUsername(username).toString());}
-        else {logger.error("Impossible de loadUserByUsername from userPrincipal");}
-
-        if (userDao.findByUsername(username) != null) {logger.info(userDao.findByUsername(username).toString());}
-        else {logger.error("Impossible de find By username from DAO");}
-
-        if (this.findByUsername(username) != null) {logger.info(this.findByUsername(username).toString());}
-        else {logger.error("Impossible de find username from user service");}
-        logger.info("----------------------------------------------------------------------------------------------");
-
-        // Création du token
-        RegistrationToken token = registrationTokenService.createPasswordResetTokenForUser(username , locale);
-
-        // Envoi du mail
-        mailService.sendSimpleMessage( token.getUser().getUsername(),mailService.subjectResetPassword( token.getUser()),mailService.messageResetPassword( token.getUser()));
-        return  token.getUser();
+        return user;
     }
 
     @Override
-    public User resetPasswordUser(String token , User user) {
+    public User resetPasswordUser(String token, User user) {
 
-        User userToSave = registrationTokenService.resetPassword(token,user);
+        User userToSave = registrationTokenService.resetPassword(token, user);
         return userToSave;
     }
+
     // OVERRIDE METHODS UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -161,11 +164,6 @@ public class UserServiceImpl implements UserServiceInterface {
         User userSave = this.update(user);
         return userSave;
     }
-
-
-
-
-
 
     ///////////////////////////////////////////////////////////////////
     // UTIL

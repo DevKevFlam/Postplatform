@@ -97,7 +97,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // ignoring the guest's urls "
                 .antMatchers("/auth/register", "/auth/Enabled/{Token}", "/auth/login",
-                        "/auth/ResetPassword/User/{username}", "/auth/ResetPassword/{Token}", "/auth/getUser", "/logout")
+                        "/auth/ResetPassword/User", "/auth/ResetPassword/{Token}", "/auth/getUser", "/logout")
                 .permitAll()
                 // authenticate all remaining URLS
                 .anyRequest()
