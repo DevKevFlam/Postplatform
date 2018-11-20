@@ -1,24 +1,22 @@
 package fr.kflamand.Backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name = "User")
-public class User  {
+//@JsonFilter("UserFilter")
+public class User implements UserDetails {
 
-
-    //public static enum Role {USER}
-
+    // ATTRIBUTES
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,19 +27,22 @@ public class User  {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private String role;
-
     private String fullName;
 
     // Boolean de validation du compte sert a bloqué le login si false
     private Boolean Enabled;
 
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @Transient
     @JsonIgnore
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE ,fetch = FetchType.LAZY)
     private RegistrationToken registrationToken;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    // CONSTRUCTOR
     public User() {
     }
 
@@ -52,12 +53,43 @@ public class User  {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // OVERRIDE METHODS
+    @Override
+    public boolean isEnabled() {
+        return this.getEnabled();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(this.role.getName()));
+        return authorities;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // GETTERS AND SETTERS
+
     // ROLE
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -65,18 +97,18 @@ public class User  {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    @Override
     public String getUsername() {
-        return username;
+        return  this.username;
     }
 
     // PASSWORD
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+    @Override
+    public String getPassword() {
+        return  this.password;
     }
 
     // FULLNAME

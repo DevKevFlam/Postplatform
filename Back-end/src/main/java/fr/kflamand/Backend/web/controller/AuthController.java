@@ -1,12 +1,12 @@
 package fr.kflamand.Backend.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
 import fr.kflamand.Backend.Exceptions.UserTokenNotFound;
 import fr.kflamand.Backend.entities.User;
-import fr.kflamand.Backend.services.MailService;
-import fr.kflamand.Backend.services.PrincipalUserService;
-import fr.kflamand.Backend.services.RegistrationTokenService;
-import fr.kflamand.Backend.services.UserService;
+import fr.kflamand.Backend.services.UserServiceInterface;
 import fr.kflamand.Backend.web.exception.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class AuthController {
     public static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    private PrincipalUserService principalUserService;
+    private UserServiceInterface userService;
 
     // SIGN UP
     // request method to create a new account by a guest
@@ -36,7 +36,7 @@ public class AuthController {
         logger.info("user register " + newUser);
         try {
 
-            User user = principalUserService.register(newUser);
+            User user = userService.register(newUser);
 
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
 
@@ -71,7 +71,7 @@ public class AuthController {
 
         try {
 
-            User user = principalUserService.enableUser(token);
+            User user = userService.enableUser(token);
 
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
 
@@ -91,7 +91,7 @@ public class AuthController {
 
         try {
 
-            User user = principalUserService.getMailForResetPasswordUser(username, locale);
+            User user = userService.getMailForResetPasswordUser(username, locale);
 
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
         } catch (UserTokenNotFound e) {
@@ -108,7 +108,7 @@ public class AuthController {
     public ResponseEntity<?> resetPasswordUser(@PathVariable("Token") String token, User userForm) {
 
         try {
-            User user = principalUserService.resetPasswordUser(token, userForm);
+            User user = userService.resetPasswordUser(token, userForm);
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
         } catch (UserTokenNotFound e) {
             logger.error("User TOken not Found //////////////  " + e.getMessage());

@@ -1,15 +1,20 @@
 package fr.kflamand.Backend.config;
 
-import fr.kflamand.Backend.services.PrincipalUserService;
+import fr.kflamand.Backend.services.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.repository.query.spi.EvaluationContextExtension;
+import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport;
+import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -22,24 +27,33 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    PrincipalUserService appUserDetailsService;
+    UserServiceInterface appUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public PrincipalUserService principalUserService() {
-        return new PrincipalUserService();
-    }
-
-
     // This method is for overriding the default AuthenticationManagerBuilder.
     @Override
+    @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(appUserDetailsService ).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(appUserDetailsService).passwordEncoder(passwordEncoder());
     }
+
+    // This method is for overriding some configuration of the WebSecurity
+    // If you want to ignore some request or request patterns then you can
+    // specify that inside this method
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/assets/**");
+        // super.configure(web);
+    }
+
+
+
+
+
 
     // this configuration allow the client app to access this api
     // all the domain that consume this api must be included in the allowed o'rings
@@ -54,14 +68,26 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-    // This method is for overriding some configuration of the WebSecurity
-    // If you want to ignore some request or request patterns then you can
-    // specify that inside this method
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
+    @Bean
+    public EvaluationContextExtension securityExtension() {
+        return new EvaluationContextExtensionSupport() {
+            @Override
+            public String getExtensionId() {
+                return "security";
+            }
+
+            @Override
+            public Object getRootObject() {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                return new SecurityExpressionRoot(authentication) {};
+            }
+        };
     }
 
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // This method is used for override HttpSecurity of the web Application.
     // We can specify our authorization criteria inside this method.
     @Override
@@ -70,8 +96,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 // starts authorizing configurations
                 .authorizeRequests()
                 // ignoring the guest's urls "
-                .antMatchers("/auth/register","/auth/Enabled/{Token}","/auth/login",
-                        "/auth/ResetPassword/User/{username}","/auth/ResetPassword/{Token}","/auth/getUser","/logout")
+                .antMatchers("/auth/register", "/auth/Enabled/{Token}", "/auth/login",
+                        "/auth/ResetPassword/User/{username}", "/auth/ResetPassword/{Token}", "/auth/getUser", "/logout")
                 .permitAll()
                 // authenticate all remaining URLS
                 .anyRequest()
@@ -80,7 +106,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
                 ////////////////////////////////////////////////////////////////////////
                 .formLogin()
-                    .loginPage("/auth/login")
+                .loginPage("/auth/login")
                 .and()
                 ////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +114,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                  * cleaning up any {link rememberMe()} authentication that was configured, */
 
                 .logout()
-                    .permitAll()
+                .permitAll()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
                 .invalidateHttpSession(true)
 
@@ -101,7 +127,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 // disabling the CSRF - Cross Site Request Forgery
                 .csrf().disable();
     }
-
 
 
 }
