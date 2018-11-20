@@ -13,7 +13,7 @@ export class ResetPasswordComponent implements OnInit {
   errorMessage: string;
   token: string;
 
-  constructor(public Aroute: ActivatedRoute, public registationService: RegistationService, public router: Router) { }
+  constructor(public Aroute: ActivatedRoute, public registationService: RegistationService, public route: Router) { }
 
   ngOnInit() {
     this.token = this.Aroute.snapshot.params['token'];
@@ -21,11 +21,13 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(){
 
-    this.registationService.resetPassword(this.token, this.user.password ).subscribe(data => {
+    this.registationService.resetPassword(this.token, this.user ).subscribe(data => {
+      // Redirection vers la page login
+      setTimeout( () => { this.route.navigate(['/']);},3000);
 
       }, err => {
         console.log(err);
-        this.errorMessage = 'username not found';
+        this.errorMessage = '';
         // TODO Erreur Reset password
       }
     );

@@ -102,7 +102,7 @@ public class AuthController {
     // Reset password form
     @CrossOrigin
     @PostMapping("/ResetPassword/{Token}")
-    public ResponseEntity<?> resetPasswordUser(@PathVariable("Token") String token, User userForm) {
+    public ResponseEntity<?> resetPasswordUser( @RequestBody User userForm, @PathVariable("Token") String token) {
 
         try {
             User user = userService.resetPasswordUser(token, userForm);

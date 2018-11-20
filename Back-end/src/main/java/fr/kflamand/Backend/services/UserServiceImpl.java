@@ -127,9 +127,9 @@ public class UserServiceImpl implements UserServiceInterface {
             logger.info("FIND!!!   ----" + this.findByUsername(username).toString());
 
             // Création du token
-            RegistrationToken token = registrationTokenService.createPasswordResetTokenForUser(username, locale);
+            RegistrationToken token = registrationTokenService.createPasswordResetTokenForUser(user, locale);
             // Envoi du mail
-            mailService.sendSimpleMessage(token.getUser().getUsername(), mailService.subjectResetPassword(token.getUser()), mailService.messageResetPassword(user, token));
+            mailService.sendSimpleMessage(user.getUsername(), mailService.subjectResetPassword(user), mailService.messageResetPassword(user, token));
         }
         logger.info("----------------------------------------------------------------------------------------------");
         return user;

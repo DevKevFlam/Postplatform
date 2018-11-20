@@ -19,7 +19,7 @@ export class EmailValidationComponent implements OnInit {
     console.log('token: '+ token);
     this.regisServ.verifyMail(token).subscribe(data => {
         // Redirection vers la page login
-      setTimeout( () => { this.route.navigate(['/']);},6000);
+      setTimeout( () => { this.route.navigate(['/']);},3000);
       }, err => {
     // TODO Erreur de verif
     }

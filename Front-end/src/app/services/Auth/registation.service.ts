@@ -31,19 +31,7 @@ console.log(username)
 
   }
 
-  resetPassword(token: string, psw: string) {
-    let user:User;
-
-    this.http.post(AppComponent.API_URL + '/auth/getUser', token).subscribe(
-      (data:User) => {
-        user = data;
-        user.password = psw;
-      },
-      err => {
-        console.log(err);
-        this.errorMessage = 'username not found';
-      }
-    );
+  resetPassword(token: string, user: User) {
 
     return this.http.post(AppComponent.API_URL + '/auth/ResetPassword/' + token, user);
 

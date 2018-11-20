@@ -38,10 +38,10 @@ public class RegistrationTokenService {
         return newRegistrationToken;
     }
 
-    public RegistrationToken createPasswordResetTokenForUser(String username, Locale locale) {
+    public RegistrationToken createPasswordResetTokenForUser(User user, Locale locale) {
 
         //RegistrationToken newRegistrationToken = new RegistrationToken();
-        RegistrationToken newRegistrationToken = registrationTokenDao.findOne(userService.findByUsername(username).getId());
+        RegistrationToken newRegistrationToken = registrationTokenDao.findOne(user.getId());
         ////
         //Expiration date
         Calendar expireDate = Calendar.getInstance(locale);
@@ -51,7 +51,7 @@ public class RegistrationTokenService {
         //Création du token
         newRegistrationToken.setToken(RandomString.generateRandomString(32));
         //Liaison au User
-        //newRegistrationToken.setUser(userService.find(username));
+        newRegistrationToken.setUser(user);
 
         this.saveTokenForResetPassword(newRegistrationToken);
         return newRegistrationToken;
@@ -71,13 +71,10 @@ public class RegistrationTokenService {
             } else {
                 // Modif de Enabled
                 userAMod.setEnabled(true);
-                // User userSave = userRepository.save(userAMod);
-                // registrationTokenDao.delete(userRT.getId());
-                userRT.setToken(null);
-                userRT.setExpire(null);
-                User userSave = registrationTokenDao.save(userRT).getUser();
-
-                return userSave;
+                // Destruction du token
+                this.destroyToken(userRT);
+                // sauvegarde User
+                return userService.update(userAMod);
             }
         }
 
@@ -97,12 +94,10 @@ public class RegistrationTokenService {
                 throw new UserTokenNotFound("Empty User");
             } else {
                 userAMod.setPassword(passwordEncoder.encode(user.getPassword()));
-
-                User userSave = userService.update(userAMod);
-
-                registrationTokenDao.delete(userRT.getId());
-
-                return userSave;
+                // Destruction du token
+                this.destroyToken(userRT);
+                // sauvegarde User
+                return userService.update(userAMod);
             }
         }
 
@@ -112,5 +107,11 @@ public class RegistrationTokenService {
     public RegistrationToken saveTokenForResetPassword(RegistrationToken token) {
         return registrationTokenDao.save(token);
 
+    }
+
+    private RegistrationToken destroyToken(RegistrationToken token) {
+        token.setToken(null);
+        token.setExpire(null);
+        return registrationTokenDao.save(token);
     }
 }
