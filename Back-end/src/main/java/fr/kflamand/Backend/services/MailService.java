@@ -2,6 +2,8 @@ package fr.kflamand.Backend.services;
 
 import fr.kflamand.Backend.entities.RegistrationToken;
 import fr.kflamand.Backend.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,10 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MailService {
 
+    public static final Logger logger = LoggerFactory.getLogger(MailService.class);
+
     private final String API_NAME = "PostPlatform";
     private final String SEPARATOR = "------------------------------------------------\n";
 
-    //TODO Ajout fin uri controller registration
+    //TODO to externalize in a XML
     private final String API_ROOT_URI = "http://localhost:4200";
     private final String API_ROOT_URI_REGISTRATION = API_ROOT_URI + "/verif/";
     private final String API_ROOT_URI_RESET_PASSWORD = API_ROOT_URI + "/ResetPassword/";
@@ -27,7 +31,7 @@ public class MailService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void sendSimpleMessage(String to, String subject, String text) {
 
-        System.out.println("Sending email...");
+        logger.info("Sending email...");
 
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -38,9 +42,10 @@ public class MailService {
 
         try {
             emailSender.send(message);
-            System.out.println("Email Sent!");
+            logger.info("Email Sent!");
         } catch (MailException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
+            logger.error("Email NOT Sent!");
         }
     }
 
@@ -48,7 +53,6 @@ public class MailService {
     public String messageRegistrationMail(User user) {
 
         String UriValidMail = API_ROOT_URI_REGISTRATION;
-
 
 
         String message = "Hi " + user.getFullName() + ",\n \n This email has been sent from: " + this.API_NAME + "\n \n You have received this email because this email address" +
