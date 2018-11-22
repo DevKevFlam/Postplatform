@@ -24,9 +24,6 @@ public class RegistrationToken implements Serializable {
     public RegistrationToken() {
     }
 
-    public RegistrationToken(String token) {
-        this.token = token;
-    }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public String getToken() {
         return token;

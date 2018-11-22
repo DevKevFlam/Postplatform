@@ -1,11 +1,13 @@
 package fr.kflamand.Backend.services;
 
+import fr.kflamand.Backend.Exceptions.TokenExpiredException;
 import fr.kflamand.Backend.Exceptions.UserTokenNotFound;
 import fr.kflamand.Backend.dao.RegistrationTokenRepository;
-import fr.kflamand.Backend.dao.UserRepository;
 import fr.kflamand.Backend.entities.RegistrationToken;
 import fr.kflamand.Backend.entities.User;
 import fr.kflamand.Backend.util.RandomString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -14,9 +16,13 @@ import java.util.Locale;
 
 public class RegistrationTokenService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationTokenService.class);
+
+    //SERVICE
     @Autowired
     private UserServiceInterface userService;
 
+    // REPOSITORY
     @Autowired
     private RegistrationTokenRepository registrationTokenDao;
 
@@ -31,7 +37,7 @@ public class RegistrationTokenService {
 
         newRegistrationToken.setUser(user);
         Calendar expireDate = Calendar.getInstance(locale);
-        expireDate.add(Calendar.DATE, 1);
+        expireDate.add(Calendar.HOUR, 12);
         newRegistrationToken.setExpire(expireDate);
         newRegistrationToken.setToken(RandomString.generateRandomString(32));
 
@@ -45,7 +51,7 @@ public class RegistrationTokenService {
         ////
         //Expiration date
         Calendar expireDate = Calendar.getInstance(locale);
-        expireDate.add(Calendar.DATE, 1);
+        expireDate.add(Calendar.HOUR, 12);
         newRegistrationToken.setExpire(expireDate);
         ////
         //Création du token
@@ -53,7 +59,7 @@ public class RegistrationTokenService {
         //Liaison au User
         newRegistrationToken.setUser(user);
 
-        this.saveTokenForResetPassword(newRegistrationToken);
+        this.saveRegistrationToken(newRegistrationToken);
         return newRegistrationToken;
     }
 
@@ -61,12 +67,17 @@ public class RegistrationTokenService {
 
         RegistrationToken userRT = registrationTokenDao.findByToken(token);
         if (userRT == null) {
+            logger.error("Token Introuvable");
             throw new UserTokenNotFound("Token Introuvable");
+        } else if ( this.isExpired(userRT) ) {
+            logger.error("Token expirer");
+            throw new TokenExpiredException("Token expirer");
         } else {
 
             User userAMod = userRT.getUser();
 
             if (userAMod == null) {
+                logger.error("Empty User");
                 throw new UserTokenNotFound("Empty User");
             } else {
                 // Modif de Enabled
@@ -85,12 +96,17 @@ public class RegistrationTokenService {
         RegistrationToken userRT = registrationTokenDao.findByToken(token);
 
         if (userRT == null) {
+            logger.error("Token Introuvable");
             throw new UserTokenNotFound("Token Introuvable");
+        } else if ( this.isExpired(userRT) ) {
+            logger.error("Token expirer");
+            throw new TokenExpiredException("Token expirer");
         } else {
 
             User userAMod = userRT.getUser();
 
             if (userAMod == null) {
+                logger.error("Empty User");
                 throw new UserTokenNotFound("Empty User");
             } else {
                 userAMod.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -104,14 +120,22 @@ public class RegistrationTokenService {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public RegistrationToken saveTokenForResetPassword(RegistrationToken token) {
+    public RegistrationToken saveRegistrationToken(RegistrationToken token) {
         return registrationTokenDao.save(token);
 
     }
 
+    public RegistrationToken getRegistrationTokenFromToken (String token) {
+        return registrationTokenDao.findByToken(token);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private RegistrationToken destroyToken(RegistrationToken token) {
         token.setToken(null);
         token.setExpire(null);
         return registrationTokenDao.save(token);
+    }
+
+    private Boolean isExpired(RegistrationToken token) {
+        return token.getExpire().before(Calendar.getInstance());
     }
 }

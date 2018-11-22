@@ -23,8 +23,7 @@ public class UserContoller {
             User user = userService.findUserWithToken(token);
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
         } catch (UserTokenNotFound e) {
-            return new ResponseEntity(new CustomErrorType("User not Found"),
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new CustomErrorType("User not Found"),HttpStatus.NOT_FOUND);
         }
     }
 

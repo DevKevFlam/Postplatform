@@ -24,7 +24,6 @@ public class MailService {
     private final String API_ROOT_URI_RESET_PASSWORD = API_ROOT_URI + "/ResetPassword/";
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Autowired
     public JavaMailSender emailSender;
 
@@ -44,8 +43,7 @@ public class MailService {
             emailSender.send(message);
             logger.info("Email Sent!");
         } catch (MailException e) {
-            logger.error(e.getMessage());
-            logger.error("Email NOT Sent!");
+            logger.error("Email NOT Sent! => " + e.getMessage());
         }
     }
 

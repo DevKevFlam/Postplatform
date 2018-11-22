@@ -1,7 +1,6 @@
 package fr.kflamand.Backend.services;
 
 import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
-import fr.kflamand.Backend.dao.RegistrationTokenRepository;
 import fr.kflamand.Backend.dao.RoleRepository;
 import fr.kflamand.Backend.dao.UserRepository;
 import fr.kflamand.Backend.entities.RegistrationToken;
@@ -23,12 +22,12 @@ public class UserServiceImpl implements UserServiceInterface {
     // REPO
     @Autowired
     private UserRepository userDao;
-    @Autowired
-    private RegistrationTokenRepository registrationTokenDao;
+
+    // TODO RoleService
     @Autowired
     private RoleRepository roleDao;
 
-    // SERVICE
+    // SERVICES
     @Autowired
     private RegistrationTokenService registrationTokenService;
     @Autowired
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserServiceInterface {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    ///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // OVERRIDE METHODS UserServiceInterface
     // CRUD
     //FIND
@@ -61,16 +60,16 @@ public class UserServiceImpl implements UserServiceInterface {
 
     @Override
     public User findUserWithToken(String token) {
-        return userDao.findOne(registrationTokenDao.findByToken(token).getId());
+        return userDao.findOne(registrationTokenService.getRegistrationTokenFromToken(token).getId());
     }
-
+    /////////////////////////////////////////////////
     // MODIFY
     @Override
     public User update(User user) {
         return userDao.save(user);
     }
-
-    //SIGN UP
+    /////////////////////////////////////////////////
+    //SIGN UP // ADD
     @Override
     public User register(User newUser) throws UserAlreadyExistException {
         User userToSave = null;
@@ -93,13 +92,17 @@ public class UserServiceImpl implements UserServiceInterface {
 
         userDao.save(userToSave);
 
-        registrationTokenDao.save(userToSave.getRegistrationToken());
+        registrationTokenService.saveRegistrationToken(userToSave.getRegistrationToken());
 
         mailService.sendSimpleMessage(userToSave.getUsername(), mailService.subjectRegistrationMail(userToSave), mailService.messageRegistrationMail(userToSave));
 
         return userToSave;
     }
+    /////////////////////////////////////////////////
+    //TODO ? DELETE
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // SERVICE METHODS
     // Verify mail
     @Override
     public User enableUser(String userToken) {
@@ -109,7 +112,7 @@ public class UserServiceImpl implements UserServiceInterface {
         return user;
 
     }
-
+    /////////////////////////////////////////////////
     // Forgotten passWord
     @Override
     public User getMailForResetPasswordUser(String username, Locale locale) {
@@ -141,7 +144,7 @@ public class UserServiceImpl implements UserServiceInterface {
         User userToSave = registrationTokenService.resetPassword(token, user);
         return userToSave;
     }
-
+    /////////////////////////////////////////////////
     // OVERRIDE METHODS UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -155,17 +158,7 @@ public class UserServiceImpl implements UserServiceInterface {
         return user;
     }
 
-    ///////////////////////////////////////////////////////////////////
-    // SERVICE METHODS
-    public User changePassword(User user) {
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        User userSave = this.update(user);
-        return userSave;
-    }
-
-    ///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UTIL
     private boolean emailExist(final String email) {
         return userDao.findByUsername(email) != null;
