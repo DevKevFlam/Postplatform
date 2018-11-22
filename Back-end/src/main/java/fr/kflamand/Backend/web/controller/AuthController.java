@@ -8,6 +8,8 @@ import fr.kflamand.Backend.web.exception.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +22,7 @@ import java.util.Locale;
 @RequestMapping("auth")
 public class AuthController {
 
-    public static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private UserServiceInterface userService;
@@ -36,7 +38,7 @@ public class AuthController {
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
         } catch (UserAlreadyExistException e) {
             logger.error("username Already exist " + newUser.getUsername());
-            return new ResponseEntity(new CustomErrorType("user with username " + newUser.getUsername() + "already exist "), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new CustomErrorType("user with username " + newUser.getUsername() + "already exist "), HttpStatus.CONFLICT);
         }
     }
     ////////////////////////////////////
@@ -60,7 +62,7 @@ public class AuthController {
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
         } catch (UserTokenNotFound e) {
             logger.error("User TOken not Found //////////////  " + e.getMessage());
-            return new ResponseEntity(new CustomErrorType("User TOken not Found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomErrorType("User TOken not Found"),HttpStatus.NOT_FOUND);
         }
     }
 
@@ -74,7 +76,7 @@ public class AuthController {
             User user = userService.getMailForResetPasswordUser(username, locale);
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
         } catch (UserTokenNotFound e) {
-            return new ResponseEntity(new CustomErrorType("User not Found"),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomErrorType("User not Found"),HttpStatus.NOT_FOUND);
         }
     }
 
@@ -88,7 +90,7 @@ public class AuthController {
             return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
         } catch (UserTokenNotFound e) {
             logger.error("User TOken not Found //////////////  " + e.getMessage());
-            return new ResponseEntity(new CustomErrorType("User TOken not Found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomErrorType("User TOken not Found"), HttpStatus.NOT_FOUND);
         }
     }
 

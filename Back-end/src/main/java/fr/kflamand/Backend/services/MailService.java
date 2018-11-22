@@ -5,23 +5,23 @@ import fr.kflamand.Backend.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
+@PropertySource("classpath:env/mail.properties")
 public class MailService {
 
-    public static final Logger logger = LoggerFactory.getLogger(MailService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
-    private final String API_NAME = "PostPlatform";
-    private final String SEPARATOR = "------------------------------------------------\n";
+    @Autowired
+    private Environment env;
 
-    //TODO to externalize in a XML
-    private final String API_ROOT_URI = "http://localhost:4200";
-    private final String API_ROOT_URI_REGISTRATION = API_ROOT_URI + "/verif/";
-    private final String API_ROOT_URI_RESET_PASSWORD = API_ROOT_URI + "/ResetPassword/";
+    private final static String SEPARATOR = "------------------------------------------------\n";
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Autowired
@@ -35,9 +35,11 @@ public class MailService {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(to);
-        message.setFrom("kev.flamand.dev.test@gmail.com");
+        message.setFrom(env.getProperty("Mail_Sender"));
         message.setSubject(subject);
         message.setText(text);
+
+       // logger.info("test import =>" + env.getProperty("test") + "<= test import");
 
         try {
             emailSender.send(message);
@@ -50,14 +52,14 @@ public class MailService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public String messageRegistrationMail(User user) {
 
-        String UriValidMail = API_ROOT_URI_REGISTRATION;
+        String UriValidMail = env.getProperty("API_ROOT_URI") + env.getProperty("API_RELATIVE_URI_REGISTRATION")+ user.getRegistrationToken().getToken();
 
 
-        String message = "Hi " + user.getFullName() + ",\n \n This email has been sent from: " + this.API_NAME + "\n \n You have received this email because this email address" +
+        String message = "Hi " + user.getFullName() + ",\n \n This email has been sent from: " + env.getProperty("API_NAME") + "\n \n You have received this email because this email address" +
                 "was used during registration for our API. If you did not register at our forums, please disregard this email. You do not need to unsubscribe or take " +
-                "any further action. \n \n" + this.SEPARATOR + " Activation Instructions \n" + this.SEPARATOR + "\n Thank you for registering. We require that you \"validate\"" +
+                "any further action. \n \n" + SEPARATOR + " Activation Instructions \n" + SEPARATOR + "\n Thank you for registering. We require that you \"validate\"" +
                 " your registration to ensure that the email address you entered was correct. This protects against unwanted spam and malicious abuse. To activate your account, " +
-                "simply click on the following link: \n \n" + UriValidMail + user.getRegistrationToken().getToken() + "\n \n (Some email client users may need to copy and paste the link into your web browser).";
+                "simply click on the following link: \n \n" + UriValidMail + "\n \n (Some email client users may need to copy and paste the link into your web browser).";
 
 
         return message;
@@ -65,16 +67,16 @@ public class MailService {
 
     public String messageResetPassword(User user, RegistrationToken token) {
 
-        String UriValidMail = API_ROOT_URI_RESET_PASSWORD;
+        String UriValidMail = env.getProperty("API_ROOT_URI") + env.getProperty("API_RELATIVE_URI_RESET_PASSWORD")+ token.getToken();
 
         String message = "Hi " + user.getFullName() +
-                ",\n \n This email has been sent from: " + this.API_NAME +
+                ",\n \n This email has been sent from: " + env.getProperty("API_NAME") +
                 "\n \n You have received this email because a password recovery for the user account \"" + user.getFullName() + "\" was instigated by you on PostPlatform. \n \n" +
-                this.SEPARATOR + "IMPORTANT!" + this.SEPARATOR +
+                SEPARATOR + "IMPORTANT! \n" + SEPARATOR +
                 "If you did not request this password change, please IGNORE and DELETE this email immediately. Only continue if you wish your password to be reset! \n \n" +
-                this.SEPARATOR + "Activation Instructions Below" + this.SEPARATOR +
+                SEPARATOR + "Activation Instructions Below" + SEPARATOR +
                 "Simply click on the link below and complete the rest of the form.\n \n" +
-                UriValidMail + token.getToken();
+                UriValidMail ;
 
         return message;
     }

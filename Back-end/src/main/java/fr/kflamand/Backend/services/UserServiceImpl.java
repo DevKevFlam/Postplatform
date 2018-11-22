@@ -127,7 +127,6 @@ public class UserServiceImpl implements UserServiceInterface {
             throw new UsernameNotFoundException("User : " + username + " introuvable");
 
         } else {
-            logger.info("FIND!!!   ----" + this.findByUsername(username).toString());
 
             // Création du token
             RegistrationToken token = registrationTokenService.createPasswordResetTokenForUser(user, locale);
