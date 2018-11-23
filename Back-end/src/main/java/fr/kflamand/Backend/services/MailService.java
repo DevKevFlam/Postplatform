@@ -39,8 +39,6 @@ public class MailService {
         message.setSubject(subject);
         message.setText(text);
 
-       // logger.info("test import =>" + env.getProperty("test") + "<= test import");
-
         try {
             emailSender.send(message);
             logger.info("Email Sent!");

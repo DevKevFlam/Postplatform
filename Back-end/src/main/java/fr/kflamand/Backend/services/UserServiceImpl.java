@@ -23,15 +23,13 @@ public class UserServiceImpl implements UserServiceInterface {
     @Autowired
     private UserRepository userDao;
 
-    // TODO RoleService
-    @Autowired
-    private RoleRepository roleDao;
-
     // SERVICES
     @Autowired
     private RegistrationTokenService registrationTokenService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private RoleService roleService;
 
     //UTIL
     @Autowired
@@ -65,7 +63,7 @@ public class UserServiceImpl implements UserServiceInterface {
     /////////////////////////////////////////////////
     // MODIFY
     @Override
-    public User update(User user) {
+    public User updateUser(User user) {
         return userDao.save(user);
     }
     /////////////////////////////////////////////////
@@ -81,7 +79,7 @@ public class UserServiceImpl implements UserServiceInterface {
             userToSave = new User();
             userToSave.setPassword(passwordEncoder.encode(newUser.getPassword()));
             userToSave.setFullName(newUser.getFullName());
-            userToSave.setRole(roleDao.findByName("ROLE_USER"));
+            userToSave.setRole(roleService.findByName("ROLE_USER"));
 
             userToSave.setEnabled(false);
             userToSave.setUsername(newUser.getUsername());
@@ -99,7 +97,12 @@ public class UserServiceImpl implements UserServiceInterface {
         return userToSave;
     }
     /////////////////////////////////////////////////
-    //TODO ? DELETE
+    // DELETE
+    @Override
+    public Boolean deleteUser(User user) {
+        userDao.delete(user);
+        return  userDao.findByUsername(user.getUsername() ) == null;
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // SERVICE METHODS

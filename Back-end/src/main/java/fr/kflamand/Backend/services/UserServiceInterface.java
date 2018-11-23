@@ -19,8 +19,10 @@ public interface UserServiceInterface extends UserDetailsService {
     User register(User newUser);
 
     // Modify User
-    User update(User user);
+    User updateUser(User user);
 
+    // Delete User
+    Boolean deleteUser (User user);
 
     // Enable User Acount
     User enableUser(String userToken);

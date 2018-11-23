@@ -85,7 +85,7 @@ public class RegistrationTokenService {
                 // Destruction du token
                 this.destroyToken(userRT);
                 // sauvegarde User
-                return userService.update(userAMod);
+                return userService.updateUser(userAMod);
             }
         }
 
@@ -113,7 +113,7 @@ public class RegistrationTokenService {
                 // Destruction du token
                 this.destroyToken(userRT);
                 // sauvegarde User
-                return userService.update(userAMod);
+                return userService.updateUser(userAMod);
             }
         }
 
