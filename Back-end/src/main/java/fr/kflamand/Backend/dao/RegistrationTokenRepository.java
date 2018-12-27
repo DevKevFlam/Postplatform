@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RegistrationTokenRepository  extends CrudRepository<RegistrationToken, Long> {
+public interface RegistrationTokenRepository  extends JpaRepository<RegistrationToken, Long> {
 
     RegistrationToken findByToken(String token);
 }

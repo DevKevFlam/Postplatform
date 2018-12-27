@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.repository.query.spi.EvaluationContextExtension;
 import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -93,26 +94,31 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
+                // disabling the CSRF - Cross Site Request Forgery
+                .csrf().disable()
                 // starts authorizing configurations
                 .authorizeRequests()
                 // ignoring the guest's urls "
+
+                .antMatchers("/post/all").anonymous()
+                .antMatchers("/post/*").hasRole("USER")
+
+
                 .antMatchers("/auth/register", "/auth/Enabled/{Token}", "/auth/login",
-                        "/auth/ResetPassword/User", "/auth/ResetPassword/{Token}", "/auth/getUser", "/logout")
-                .permitAll()
+                        "/auth/ResetPassword/User", "/auth/ResetPassword/{Token}", "/auth/getUser", "/logout").permitAll()
                 // authenticate all remaining URLS
                 .anyRequest()
                 .fullyAuthenticated()
                 .and()
 
                 ////////////////////////////////////////////////////////////////////////
+                //LOGIN
                 .formLogin()
                 .loginPage("/auth/login")
                 .and()
+
                 ////////////////////////////////////////////////////////////////////////
-
-                /* "/logout" will log the user out by invalidating the HTTP Session,
-                 * cleaning up any {link rememberMe()} authentication that was configured, */
-
+                //LOGOUT
                 .logout()
                 .permitAll()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
@@ -120,12 +126,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
 
                 .and()
+
                 // enabling the basic authentication
                 .httpBasic().and()
+
                 // configuring the session on the server
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
-                // disabling the CSRF - Cross Site Request Forgery
-                .csrf().disable();
+               ;
     }
 
 
