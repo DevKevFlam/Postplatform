@@ -47,7 +47,7 @@ public class RegistrationTokenService {
     public RegistrationToken createPasswordResetTokenForUser(User user, Locale locale) {
 
         //RegistrationToken newRegistrationToken = new RegistrationToken();
-        RegistrationToken newRegistrationToken = registrationTokenDao.findOne(user.getId());
+        RegistrationToken newRegistrationToken = registrationTokenDao.findOne(user.getUserId());
         ////
         //Expiration date
         Calendar expireDate = Calendar.getInstance(locale);

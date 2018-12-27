@@ -3,6 +3,7 @@ package fr.kflamand.Backend.services;
 import fr.kflamand.Backend.Exceptions.UserAlreadyExistException;
 import fr.kflamand.Backend.dao.RoleRepository;
 import fr.kflamand.Backend.dao.UserRepository;
+import fr.kflamand.Backend.entities.CustomUserDetails;
 import fr.kflamand.Backend.entities.RegistrationToken;
 import fr.kflamand.Backend.entities.User;
 import org.slf4j.Logger;
@@ -71,18 +72,18 @@ public class UserServiceImpl implements UserServiceInterface {
     @Override
     public User register(User newUser) throws UserAlreadyExistException {
         User userToSave = null;
-        if (emailExist(newUser.getUsername())) {
-            throw new UserAlreadyExistException("There is an account with that email adress: " + newUser.getUsername());
+        if (emailExist(newUser.getUserName())) {
+            throw new UserAlreadyExistException("There is an account with that email adress: " + newUser.getUserName());
         } else {
 
             Locale locale = LocaleContextHolder.getLocale();
             userToSave = new User();
             userToSave.setPassword(passwordEncoder.encode(newUser.getPassword()));
-            userToSave.setFullName(newUser.getFullName());
+            userToSave.setPseudo(newUser.getPseudo());
             userToSave.setRole(roleService.findByName("ROLE_USER"));
 
             userToSave.setEnabled(false);
-            userToSave.setUsername(newUser.getUsername());
+            userToSave.setUserName(newUser.getUserName());
 
             userToSave.setRegistrationToken(registrationTokenService.createNewRegistrationToken(userToSave, locale));
 
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserServiceInterface {
 
         registrationTokenService.saveRegistrationToken(userToSave.getRegistrationToken());
 
-        mailService.sendSimpleMessage(userToSave.getUsername(), mailService.subjectRegistrationMail(userToSave), mailService.messageRegistrationMail(userToSave));
+        mailService.sendSimpleMessage(userToSave.getUserName(), mailService.subjectRegistrationMail(userToSave), mailService.messageRegistrationMail(userToSave));
 
         return userToSave;
     }
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserServiceInterface {
     @Override
     public Boolean deleteUser(User user) {
         userDao.delete(user);
-        return  userDao.findByUsername(user.getUsername() ) == null;
+        return  userDao.findByUsername(user.getUserName() ) == null;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,8 +118,7 @@ public class UserServiceImpl implements UserServiceInterface {
     }
     /////////////////////////////////////////////////
     // Forgotten passWord
-    @Override
-    public User getMailForResetPasswordUser(String username, Locale locale) {
+    @Override    public User getMailForResetPasswordUser(String username, Locale locale) {
 
         User user = this.findByUsername(username);
 
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserServiceInterface {
             // Création du token
             RegistrationToken token = registrationTokenService.createPasswordResetTokenForUser(user, locale);
             // Envoi du mail
-            mailService.sendSimpleMessage(user.getUsername(), mailService.subjectResetPassword(user), mailService.messageResetPassword(user, token));
+            mailService.sendSimpleMessage(user.getUserName(), mailService.subjectResetPassword(user), mailService.messageResetPassword(user, token));
         }
         logger.info("----------------------------------------------------------------------------------------------");
         return user;
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserServiceInterface {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         // Load user from the database (throw exception if not found)
-        User user = userDao.findByUsername(username);
+        CustomUserDetails user = (CustomUserDetails) userDao.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

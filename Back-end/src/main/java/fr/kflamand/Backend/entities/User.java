@@ -2,148 +2,75 @@ package fr.kflamand.Backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Table(name = "User")
-public class User implements UserDetails {
+@Table(name = "users")
+public class User {
 
-    // ATTRIBUTES
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name="userid")
+    private Long userId;
 
-    @Column(unique = true)
-    private String username;
+    //Pseudo
+    @Column(name = "pseudo" , unique = true)
+    private String pseudo;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password")
     private String password;
 
-    private String fullName;
+    @Column(name = "email")
+    private String userName;
 
-    // Boolean de validation du compte sert a bloqué le login si false
-    private Boolean Enabled;
-
-    @OneToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @Column(name ="enabled")
+    private Boolean enabled;
 
     @Transient
     @JsonIgnore
     @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE ,fetch = FetchType.LAZY)
     private RegistrationToken registrationToken;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTOR
-    public User() {
-    }
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-    public User(String username, String password, String fullName) {
-        this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-    }
+    @OneToMany
+    private List<Post> posts;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // OVERRIDE METHODS
-    @Override
-    public boolean isEnabled() {
-        return this.getEnabled();
-    }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+    public Long getUserId() { return userId; }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+    public String getPassword() { return password; }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(this.role.getName()));
-        return authorities;
-    }
+    public void setPassword(String password) { this.password = password; }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    // GETTERS AND SETTERS
+    public RegistrationToken getRegistrationToken() { return registrationToken; }
 
-    // ROLE
-    public Role getRole() {
-        return role;
-    }
+    public void setRegistrationToken(RegistrationToken registrationToken) { this.registrationToken = registrationToken; }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+    public List<Post> getPosts() { return posts; }
 
-    // USERNAME
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    @Override
-    public String getUsername() {
-        return  this.username;
-    }
+    public void setPosts(List<Post> posts) { this.posts = posts;}
 
-    // PASSWORD
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    @Override
-    public String getPassword() {
-        return  this.password;
-    }
+    public String getPseudo() { return pseudo; }
 
-    // FULLNAME
-    public String getFullName() {
-        return this.fullName;
-    }
+    public void setPseudo(String pseudo) { this.pseudo = pseudo; }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+    public String getUserName() { return userName; }
 
-    // ENABLED
-    public void setEnabled(Boolean verified) {
-        Enabled = verified;
-    }
+    public void setUserName(String userName) { this.userName = userName; }
 
-    public Boolean getEnabled() {
-       return this.Enabled;
-    }
+    public Role getRole() { return role; }
 
-    // TOKEN
-    public RegistrationToken getRegistrationToken() {
-        return registrationToken;
-    }
+    public void setRole(Role role) { this.role = role; }
 
-    public void setRegistrationToken(RegistrationToken registrationToken) {
-        this.registrationToken = registrationToken;
-    }
+    public Boolean getEnabled() { return enabled; }
 
-    // ID
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
 }

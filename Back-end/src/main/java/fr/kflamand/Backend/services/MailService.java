@@ -53,7 +53,7 @@ public class MailService {
         String UriValidMail = env.getProperty("API_ROOT_URI") + env.getProperty("API_RELATIVE_URI_REGISTRATION")+ user.getRegistrationToken().getToken();
 
 
-        String message = "Hi " + user.getFullName() + ",\n \n This email has been sent from: " + env.getProperty("API_NAME") + "\n \n You have received this email because this email address" +
+        String message = "Hi " + user.getPseudo() + ",\n \n This email has been sent from: " + env.getProperty("API_NAME") + "\n \n You have received this email because this email address" +
                 "was used during registration for our API. If you did not register at our forums, please disregard this email. You do not need to unsubscribe or take " +
                 "any further action. \n \n" + SEPARATOR + " Activation Instructions \n" + SEPARATOR + "\n Thank you for registering. We require that you \"validate\"" +
                 " your registration to ensure that the email address you entered was correct. This protects against unwanted spam and malicious abuse. To activate your account, " +
@@ -67,9 +67,9 @@ public class MailService {
 
         String UriValidMail = env.getProperty("API_ROOT_URI") + env.getProperty("API_RELATIVE_URI_RESET_PASSWORD")+ token.getToken();
 
-        String message = "Hi " + user.getFullName() +
+        String message = "Hi " + user.getPseudo() +
                 ",\n \n This email has been sent from: " + env.getProperty("API_NAME") +
-                "\n \n You have received this email because a password recovery for the user account \"" + user.getFullName() + "\" was instigated by you on PostPlatform. \n \n" +
+                "\n \n You have received this email because a password recovery for the user account \"" + user.getPseudo() + "\" was instigated by you on PostPlatform. \n \n" +
                 SEPARATOR + "IMPORTANT! \n" + SEPARATOR +
                 "If you did not request this password change, please IGNORE and DELETE this email immediately. Only continue if you wish your password to be reset! \n \n" +
                 SEPARATOR + "Activation Instructions Below" + SEPARATOR +
@@ -81,14 +81,14 @@ public class MailService {
 
     public String subjectResetPassword(User user) {
 
-        String subject = "Hi " + user.getFullName() + ". Would you reset your password for PostPlatform?";
+        String subject = "Hi " + user.getPseudo() + ". Would you reset your password for PostPlatform?";
 
         return subject;
     }
 
     public String subjectRegistrationMail(User user) {
 
-        String subject = "Wellcome to PostPlatform, " + user.getFullName() + ".";
+        String subject = "Wellcome to PostPlatform, " + user.getPseudo() + ".";
 
         return subject;
     }

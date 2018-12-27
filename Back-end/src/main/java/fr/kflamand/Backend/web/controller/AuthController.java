@@ -37,8 +37,8 @@ public class AuthController {
             User user = userService.register(newUser);
             return new ResponseEntity<User>(user, HttpStatus.CREATED);
         } catch (UserAlreadyExistException e) {
-            logger.error("username Already exist " + newUser.getUsername());
-            return new ResponseEntity<>(new CustomErrorType("user with username " + newUser.getUsername() + "already exist "), HttpStatus.CONFLICT);
+            logger.error("username Already exist " + newUser.getUserName());
+            return new ResponseEntity<>(new CustomErrorType("user with username " + newUser.getUserName() + "already exist "), HttpStatus.CONFLICT);
         }
     }
     ////////////////////////////////////
