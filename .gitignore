@@ -2,3 +2,5 @@
 \.idea/
 
 Front-end/node_modules/
+
+Back-end/target/

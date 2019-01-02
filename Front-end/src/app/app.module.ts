@@ -16,6 +16,13 @@ import {EmailValidationComponent} from './component/Auth/email-validation/email-
 import { ResetPasswordComponent } from './component/Auth/reset-password/reset-password.component';
 import { AskForResetPasswordComponent } from './component/Auth/ask-for-reset-password/ask-for-reset-password.component';
 import { PostItemComponent } from './component/Post/post-item/post-item.component';
+import { PostListComponent } from './component/Post/post-list/post-list.component';
+import { NewPostComponent } from './component/Post/new-post/new-post.component';
+import {PostService} from "./services/posts.service";
+import { NavBarComponent } from './component/Header/nav-bar/nav-bar.component';
+import { UserItemComponent } from './component/User/user-item/user-item.component';
+import { UserListComponent } from './component/User/user-list/user-list.component';
+import { PostUpdateComponent } from './component/Post/post-update/post-update.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +33,13 @@ import { PostItemComponent } from './component/Post/post-item/post-item.componen
     EmailValidationComponent,
     ResetPasswordComponent,
     AskForResetPasswordComponent,
-    PostItemComponent
+    PostItemComponent,
+    PostListComponent,
+    NewPostComponent,
+    NavBarComponent,
+    UserItemComponent,
+    UserListComponent,
+    PostUpdateComponent
   ],
 
   imports: [
@@ -36,7 +49,7 @@ import { PostItemComponent } from './component/Post/post-item/post-item.componen
     routing,
     AngularWebStorageModule
   ],
-  providers: [AuthService, RegistationService , AuthGuardService],
+  providers: [AuthService, RegistationService , AuthGuardService, PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

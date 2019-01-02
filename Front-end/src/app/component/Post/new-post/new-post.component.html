@@ -1,0 +1,20 @@
+<p><div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Enregistrer un nouveau Post</h2>
+    <form [formGroup]="postForm" (ngSubmit)="onSavePost()">
+      <div class="form-group">
+        <label for="title">Titre</label>
+        <input type="text" class="form-control" id="title" formControlName="title">
+      </div>
+      <div class="form-group">
+        <label for="contenu">Contenu</label>
+        <textarea name="contenu" type="text" class="form-control" id="contenu" formControlName="contenu"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="url">Source</label>
+        <input type="url" class="form-control" id="url" formControlName="url">
+      </div>
+      <button class="btn btn-success" [disabled]="postForm.invalid" type="submit" >Enregistrer</button>
+    </form>
+  </div>
+</div>

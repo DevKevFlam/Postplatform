@@ -1,0 +1,43 @@
+<div class="row">
+
+  <div class="col-xs-10 col-xs-offset-1 bg-warning" [ngClass]="{'list-group-item': true,
+ 'list-group-item-success': post.loveIts > 0,
+ 'list-group-item-danger': post.loveIts < 0,
+ 'list-group-item-info': post.loveIts === 10}">
+
+    <div class="col-xs-12 row">
+      <h1 class=" col-xs-6">{{ post.title }}</h1>
+      <p class="col-xs-offset-1 col-xs-3 text-right pull-right"> {{post.date | date:'short'}}</p>
+    </div>
+
+    <div class="col-xs-12 row">
+      <blockquote>
+        <p class="text-justify">{{post.contenu}}</p>
+      </blockquote>
+    </div>
+
+    <div class="col-xs-12 row">
+      <a class="col-xs-3 source text-body" href="{{post.url}}">Source</a>
+      <span class="col-xs-offset-5 col-xs-4 text-right text-muted">Posted by {{post.poster}}</span>
+    </div>
+  </div>
+
+  <div class="col-xs-10 col-xs-offset-1 bg-info ">
+    <h2>Modifier ce Post</h2>
+    <form [formGroup]="postForm" (ngSubmit)="onUpdatePost()">
+      <div class="form-group">
+        <label for="title">Titre</label>
+        <input type="text" class="form-control" id="title" formControlName="title" value="{{post.title}}">
+      </div>
+      <div class="form-group">
+        <label for="contenu">Contenu</label>
+        <textarea name="contenu" type="text" class="form-control" id="contenu" formControlName="contenu" value="{{post.contenu}}" rows="10" ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="url">Source</label>
+        <input type="url" class="form-control" id="url" formControlName="url" value="{{post.url}}">
+      </div>
+      <button class="btn btn-success" [disabled]="postForm.invalid" type="submit" >Enregistrer</button>
+    </form>
+  </div>
+</div>
